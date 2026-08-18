@@ -1,0 +1,83 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <!-- En-tête avec Logo CineManager -->
+    <div class="auth-header">
+      <div class="brand">
+        <span class="brand-icon">🎬</span>
+        <span class="brand-title">Cine<span class="highlight">Manager</span></span>
+      </div>
+      <h2>{{ isLoginMode ? 'Bienvenue !' : 'Créer un compte' }}</h2>
+      <p>{{ isLoginMode ? 'Connectez-vous pour accéder à vos réservations.' : 'Remplissez le formulaire pour rejoindre CineManager.' }}</p>
+    </div>
+
+    <!-- Formulaire d'authentification -->
+    <form (ngSubmit)="onSubmit()" #authForm="ngForm">
+      
+      <!-- Champ Nom d'utilisateur (Username) -->
+      <div class="form-group">
+        <label for="username">Nom d'utilisateur</label>
+        <div class="input-wrapper">
+          <i class="bi bi-person"></i>
+          <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            [(ngModel)]="authData.username" 
+            required 
+            placeholder="Ex: mchaabi" 
+          />
+        </div>
+      </div>
+
+      <!-- Champ Email (Visible uniquement en mode Inscription) -->
+      <div class="form-group" *ngIf="!isLoginMode">
+        <label for="email">Adresse E-mail</label>
+        <div class="input-wrapper">
+          <i class="bi bi-envelope"></i>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            [(ngModel)]="authData.email" 
+            required 
+            email 
+            placeholder="exemple@cinema.com" 
+          />
+        </div>
+      </div>
+
+      <!-- Champ Mot de passe -->
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <div class="input-wrapper">
+          <i class="bi bi-lock"></i>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            [(ngModel)]="authData.password" 
+            required 
+            placeholder="••••••••" 
+          />
+        </div>
+      </div>
+
+      <!-- Bouton de validation -->
+      <button type="submit" class="btn-submit" [disabled]="!authForm.valid">
+        {{ isLoginMode ? 'Se connecter' : "S'inscrire" }}
+      </button>
+    </form>
+
+    <!-- Pied de carte pour basculer de mode -->
+    <div class="auth-footer">
+      <p *ngIf="isLoginMode">
+        Vous n'avez pas de compte ? 
+        <a href="javascript:void(0)" (click)="toggleMode()">S'inscrire</a>
+      </p>
+      <p *ngIf="!isLoginMode">
+        Vous avez déjà un compte ? 
+        <a href="javascript:void(0)" (click)="toggleMode()">Se connecter</a>
+      </p>
+    </div>
+  </div>
+</div>

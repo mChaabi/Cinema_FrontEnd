@@ -1,0 +1,144 @@
+$bg-main: #0b0f19;
+$bg-card: #0f172a;
+$bg-input: #1e293b;
+$border-color: #334155;
+$primary-red: #e11d48;
+$text-main: #f8fafc;
+$text-muted: #94a3b8;
+
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $bg-main;
+  padding: 20px;
+
+  .auth-card {
+    width: 100%;
+    max-width: 420px;
+    background-color: $bg-card;
+    border: 1px solid $border-color;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: 28px;
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+
+        .brand-title {
+          color: $text-main;
+          .highlight {
+            color: $primary-red;
+          }
+        }
+      }
+
+      h2 {
+        color: $text-main;
+        font-size: 1.5rem;
+        margin-bottom: 6px;
+      }
+
+      p {
+        color: $text-muted;
+        font-size: 0.875rem;
+      }
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+
+      label {
+        display: block;
+        color: $text-main;
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+
+      .input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+
+        i {
+          position: absolute;
+          left: 14px;
+          color: $text-muted;
+          font-size: 1rem;
+        }
+
+        input {
+          width: 100%;
+          background-color: $bg-input;
+          border: 1px solid $border-color;
+          border-radius: 10px;
+          padding: 12px 14px 12px 42px;
+          color: $text-main;
+          font-size: 0.9rem;
+          outline: none;
+          transition: border-color 0.2s, box-shadow 0.2s;
+
+          &::placeholder {
+            color: #64748b;
+          }
+
+          &:focus {
+            border-color: $primary-red;
+            box-shadow: 0 0 0 3px rgba($primary-red, 0.25);
+          }
+        }
+      }
+    }
+
+    .btn-submit {
+      width: 100%;
+      background-color: $primary-red;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      margin-top: 10px;
+
+      &:hover {
+        background-color: #be123c;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+
+    .auth-footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 0.875rem;
+      color: $text-muted;
+
+      a {
+        color: $primary-red;
+        text-decoration: none;
+        font-weight: 600;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}

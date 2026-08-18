@@ -68,41 +68,73 @@ $text-muted: #94a3b8;
   }
 }
 
-// Section Centre - Recherche
+// Section Centre - Recherche Unifiée
 .navbar-center {
   flex: 1;
-  max-width: 480px;
+  max-width: 580px;
 
-  .search-box {
-    position: relative;
+  .search-group {
     display: flex;
     align-items: center;
+    background-color: $bg-search;
+    border: 1px solid $border-color;
+    border-radius: 20px;
+    padding: 2px 8px;
+    transition: border-color 0.2s, box-shadow 0.2s;
 
-    .search-icon {
-      position: absolute;
-      left: 12px;
-      color: $text-muted;
-      font-size: 0.9rem;
+    &:focus-within {
+      border-color: $primary-red;
+      box-shadow: 0 0 0 3px rgba($primary-red, 0.25);
     }
 
-    input {
-      width: 100%;
-      background-color: $bg-search;
-      border: 1px solid $border-color;
-      border-radius: 20px;
-      padding: 8px 16px 8px 36px;
-      color: $text-main;
-      font-size: 0.875rem;
+    // Style du Select Genre (intégré à la pilule)
+    .genre-select {
+      background: transparent;
+      border: none;
+      border-right: 1px solid $border-color;
+      color: $text-muted;
+      font-size: 0.85rem;
+      padding: 6px 10px;
       outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      transition: color 0.2s;
 
-      &::placeholder {
-        color: $text-muted;
+      &:hover, &:focus {
+        color: $text-main;
       }
 
-      &:focus {
-        border-color: $primary-red;
-        box-shadow: 0 0 0 3px rgba($primary-red, 0.25);
+      option {
+        background-color: $bg-navbar;
+        color: $text-main;
+      }
+    }
+
+    // Champ de recherche
+    .search-box {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      .search-icon {
+        position: absolute;
+        left: 12px;
+        color: $text-muted;
+        font-size: 0.9rem;
+      }
+
+      input {
+        width: 100%;
+        background: transparent;
+        border: none;
+        padding: 8px 16px 8px 36px;
+        color: $text-main;
+        font-size: 0.875rem;
+        outline: none;
+
+        &::placeholder {
+          color: $text-muted;
+        }
       }
     }
   }
