@@ -1,0 +1,14 @@
+<div class="layout-container">
+  <!-- Appel de la Navbar -->
+  <app-navbar (toggleSidebar)="toggleSidebar()"></app-navbar>
+
+  <div class="layout-body">
+    <!-- Appel de la Sidebar -->
+    <app-sidebar [isCollapsed]="isSidebarCollapsed"></app-sidebar>
+
+    <!-- Zone de contenu dynamique (Router) -->
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

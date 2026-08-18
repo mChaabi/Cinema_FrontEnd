@@ -1,0 +1,237 @@
+// Variables
+$bg-navbar: #0f172a;
+$bg-search: #1e293b;
+$border-color: #334155;
+$primary-red: #e11d48;
+$text-main: #f8fafc;
+$text-muted: #94a3b8;
+
+.navbar-container {
+  height: 64px;
+  background-color: $bg-navbar;
+  border-bottom: 1px solid $border-color;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  color: $text-main;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 100;
+}
+
+// Boutons d'icônes réutilisables
+.btn-icon {
+  background: transparent;
+  border: none;
+  color: $text-muted;
+  font-size: 1.25rem;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: $bg-search;
+    color: $text-main;
+  }
+}
+
+// Section Gauche
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+
+    .brand-icon {
+      font-size: 1.5rem;
+    }
+
+    .brand-title {
+      color: $text-main;
+
+      .highlight {
+        color: $primary-red;
+      }
+    }
+  }
+}
+
+// Section Centre - Recherche
+.navbar-center {
+  flex: 1;
+  max-width: 480px;
+
+  .search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      color: $text-muted;
+      font-size: 0.9rem;
+    }
+
+    input {
+      width: 100%;
+      background-color: $bg-search;
+      border: 1px solid $border-color;
+      border-radius: 20px;
+      padding: 8px 16px 8px 36px;
+      color: $text-main;
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+
+      &::placeholder {
+        color: $text-muted;
+      }
+
+      &:focus {
+        border-color: $primary-red;
+        box-shadow: 0 0 0 3px rgba($primary-red, 0.25);
+      }
+    }
+  }
+}
+
+// Section Droite - Notifications & Profil
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  .notif-btn {
+    position: relative;
+
+    .badge-notif {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background-color: $primary-red;
+      color: white;
+      font-size: 0.65rem;
+      font-weight: bold;
+      padding: 2px 5px;
+      border-radius: 10px;
+      line-height: 1;
+    }
+  }
+
+  .user-dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: $bg-search;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, $primary-red, #9f1239);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+      font-size: 0.9rem;
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+
+      .user-name {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: $text-main;
+      }
+
+      .user-role {
+        font-size: 0.725rem;
+        color: $text-muted;
+      }
+    }
+
+    .dropdown-icon {
+      font-size: 0.75rem;
+      color: $text-muted;
+    }
+
+    // Dropdown Menu
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      width: 200px;
+      background-color: $bg-navbar;
+      border: 1px solid $border-color;
+      border-radius: 8px;
+      padding: 6px 0;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+      display: none;
+      flex-direction: column;
+
+      &.show {
+        display: flex;
+      }
+
+      .dropdown-item {
+        padding: 10px 16px;
+        color: $text-main;
+        text-decoration: none;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: transparent;
+        border: none;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: $bg-search;
+          color: $primary-red;
+        }
+
+        &.logout {
+          color: #f87171;
+
+          &:hover {
+            background-color: rgba(#ef4444, 0.1);
+          }
+        }
+      }
+
+      .dropdown-divider {
+        height: 1px;
+        background-color: $border-color;
+        margin: 4px 0;
+      }
+    }
+  }
+}
