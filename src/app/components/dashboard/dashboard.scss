@@ -1,0 +1,347 @@
+// ==========================================
+// 🎨 Variables & Design Tokens
+// ==========================================
+$bg-dark: #0f172a;          // Fond principal (Deep Slate Dark)
+$bg-card: #1e293b;          // Fond des cartes
+$bg-hover: #334155;         // État au survol
+$primary: #e11d48;          // Rouge Crimson CineManager
+$primary-hover: #be123c;
+$primary-glow: rgba(225, 29, 72, 0.25);
+
+$text-main: #f8fafc;
+$text-muted: #94a3b8;
+
+$border-color: rgba(255, 255, 255, 0.08);
+$border-light: rgba(255, 255, 255, 0.15);
+$shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+$shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
+
+// ==========================================
+// 🚀 Dashboard Container
+// ==========================================
+.dashboard-container {
+  padding: 2rem;
+  color: $text-main;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+// ==========================================
+// ⌛ Loading Spinner
+// ==========================================
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 1.25rem;
+
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid rgba($primary, 0.2);
+    border-top-color: $primary;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  p {
+    color: $text-muted;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+}
+
+// ==========================================
+// 📌 En-tête (Dashboard Header)
+// ==========================================
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  .page-title {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0 0 0.35rem 0;
+  }
+
+  .page-subtitle {
+    color: $text-muted;
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, $primary 0%, $primary-hover 100%);
+    color: #ffffff;
+    border: none;
+    padding: 0.75rem 1.4rem;
+    border-radius: $radius-sm;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    box-shadow: 0 4px 12px $primary-glow;
+    transition: all 0.25s ease;
+
+    i {
+      font-size: 1.1rem;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(225, 29, 72, 0.4);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+// ==========================================
+// 📊 Cartes KPI Grid
+// ==========================================
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+
+  .kpi-card {
+    background: $bg-card;
+    border: 1px solid $border-color;
+    border-radius: $radius-md;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: $shadow-sm;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, $primary, transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    &:hover {
+      transform: translateY(-4px);
+      border-color: $border-light;
+      box-shadow: $shadow-lg;
+
+      &::before {
+        opacity: 1;
+      }
+    }
+
+    .kpi-info {
+      display: flex;
+      flex-direction: column;
+
+      .kpi-title {
+        color: $text-muted;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.4rem;
+      }
+
+      .kpi-value {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: $text-main;
+        line-height: 1.2;
+        margin-bottom: 0.4rem;
+      }
+
+      .kpi-change {
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+
+        &.positive {
+          color: #10b981;
+        }
+      }
+    }
+
+    .kpi-icon {
+      width: 52px;
+      height: 52px;
+      background: rgba($primary, 0.12);
+      border: 1px solid rgba($primary, 0.2);
+      border-radius: $radius-md;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $primary;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+  }
+}
+
+// ==========================================
+// 📈 Section Graphiques & Salles
+// ==========================================
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 1.5rem;
+
+  @media (max-width: 500px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dashboard-card {
+  background: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  padding: 1.75rem;
+  box-shadow: $shadow-sm;
+
+  .card-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid $border-color;
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin: 0;
+      color: $text-main;
+
+      i {
+        color: $primary;
+        font-size: 1.25rem;
+      }
+    }
+  }
+}
+
+// 🎭 Barres de Progression par Genre
+.genres-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  .genre-item {
+    .genre-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+
+      .count {
+        color: $text-muted;
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+    }
+
+    .progress-bar-bg {
+      height: 10px;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 20px;
+      overflow: hidden;
+      padding: 2px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+
+      .progress-bar-fill {
+        height: 100%;
+        border-radius: 20px;
+        transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+    }
+  }
+}
+
+// 🎬 Liste des Salles
+.salles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .salle-item {
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid $border-color;
+    padding: 1.1rem 1.25rem;
+    border-radius: $radius-md;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.25s ease;
+
+    &:hover {
+      background: rgba(15, 23, 42, 0.8);
+      border-color: $border-light;
+      transform: translateX(4px);
+    }
+
+    .salle-main {
+      .salle-name {
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: $text-main;
+        margin-bottom: 0.2rem;
+      }
+
+      .salle-movie {
+        font-size: 0.85rem;
+        color: $text-muted;
+
+        span {
+          color: #10b981;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
+
+// ==========================================
+// 🔄 Animations Keyframes
+// ==========================================
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
