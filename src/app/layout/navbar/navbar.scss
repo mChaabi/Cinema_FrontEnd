@@ -87,7 +87,7 @@ $text-muted: #94a3b8;
       box-shadow: 0 0 0 3px rgba($primary-red, 0.25);
     }
 
-    // Style du Select Genre (intégré à la pilule)
+    // Style du Select Genre
     .genre-select {
       background: transparent;
       border: none;
@@ -137,14 +137,10 @@ $text-muted: #94a3b8;
         }
       }
     }
-// Section Centre - Accueil & statut
-.navbar-center {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  max-width: 480px;
+  }
 }
 
+// Banner d'accueil et statut
 .welcome-banner {
   display: flex;
   align-items: center;
@@ -320,6 +316,7 @@ $text-muted: #94a3b8;
   }
 }
 
+// Media Queries
 @media (max-width: 768px) {
   .welcome-banner {
     padding: 6px 10px;
