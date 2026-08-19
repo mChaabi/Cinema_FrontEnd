@@ -1,0 +1,46 @@
+<div class="history-wrapper">
+<div class="header-section">
+<h2 class="page-title"><i class="bi bi-journal-text"></i> Mes Réservations</h2>
+<p class="subtitle">Historique de vos billets de cinéma</p>
+</div>
+<!-- Message dyal l'chargement -->
+<div *ngIf="isLoading" class="state-message">
+<i class="bi bi-hourglass-split spin-icon"></i>
+<p>Chargement de vos billets...</p>
+</div>
+<!-- Message dyal l'erreur -->
+<div *ngIf="errorMessage" class="state-message error">
+<i class="bi bi-exclamation-triangle-fill"></i>
+<p>{{ errorMessage }}</p>
+</div>
+<!-- Message ila makayn hta billet -->
+<div *ngIf="!isLoading && reservations.length === 0 && !errorMessage" class="state-message empty">
+<i class="bi bi-ticket-perforated"></i>
+<p>Vous n'avez pas encore réservé de billets.</p>
+<a routerLink="/reservations/nouvelle" class="btn-primary">Réserver maintenant</a>
+</div>
+<!-- L-List dyal les Tickets -->
+<div *ngIf="!isLoading && reservations.length > 0" class="tickets-grid">
+<!-- Boucle *ngFor bach y-kreyi carte l kol billet f la base de données -->
+<div *ngFor="let res of reservations" class="ticket-card">
+<div class="ticket-header">
+<span class="ticket-id">Billet #{{ res.id }}</span>
+<!-- Kan-formatiw t-tarikh bach y-ban n9i -->
+<span class="ticket-date"><i class="bi bi-calendar3"></i> {{ res.dateReservation | date:'dd/MM/yyyy HH:mm' }}</span>
+</div>
+<div class="ticket-body">
+<div class="info-row">
+<span class="label">Séance ID:</span>
+<span class="value">{{ res.seanceId }}</span>
+</div>
+<div class="info-row">
+<span class="label">Places réservées:</span>
+<span class="value highlight">{{ res.nbrPlaces }} <i class="bi bi-people-fill"></i></span>
+</div>
+</div>
+<div class="ticket-footer">
+<i class="bi bi-qr-code-scan"></i> Réservation Valide
+</div>
+</div>
+</div>
+</div>

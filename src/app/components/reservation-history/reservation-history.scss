@@ -1,0 +1,257 @@
+.history-wrapper {
+
+  padding: 2rem 1rem 6rem 1rem; 
+
+  color: #ffffff;
+
+  animation: fadeIn 0.5s ease-in;
+
+
+  height: 100vh;
+
+  overflow-y: auto;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+
+.history-wrapper::-webkit-scrollbar {
+
+  display: none;
+
+}
+ 
+
+.header-section {
+
+  margin-bottom: 3rem;
+
+  .page-title {
+
+    font-size: 2rem;
+
+    margin: 0 0 0.5rem 0;
+
+    font-weight: 700;
+
+    color: #ffffff;
+
+    i {
+
+      color: #e50914;
+
+      margin-right: 10px;
+
+    }
+
+  }
+
+  .subtitle {
+
+    color: #a0aabf;
+
+    font-size: 1rem;
+
+  }
+
+}
+
+
+.state-message {
+
+  text-align: center;
+
+  padding: 4rem 2rem;
+
+  background-color: #1e222b;
+
+  border-radius: 12px;
+
+  border: 1px dashed #3f4555;
+
+  i {
+
+    font-size: 3rem;
+
+    color: #a0aabf;
+
+    margin-bottom: 1rem;
+
+    display: inline-block;
+
+  }
+
+  p {
+
+    color: #c1c8d7;
+
+    font-size: 1.1rem;
+
+  }
+&.error i { color: #e50914; }
+
+  .btn-primary {
+
+    display: inline-block;
+
+    margin-top: 1rem;
+
+    background: linear-gradient(135deg, #e50914, #b20710);
+
+    color: white;
+
+    padding: 0.8rem 1.5rem;
+
+    border-radius: 6px;
+
+    text-decoration: none;
+
+    font-weight: bold;
+
+    transition: 0.3s;
+&:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4); }
+
+  }
+
+}
+
+.spin-icon {
+
+  animation: spin 2s linear infinite;
+
+}
+
+/* Grid dyal les Tickets */
+
+.tickets-grid {
+
+  display: grid;
+
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+
+  gap: 1.5rem;
+
+}
+
+/* L'Carte dyal l'Billet (Ticket) */
+
+.ticket-card {
+
+  background: linear-gradient(145deg, #262b36, #1e222b);
+
+  border-radius: 12px;
+
+  overflow: hidden;
+
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+
+  border: 1px solid rgba(255,255,255,0.05);
+
+  position: relative;
+
+  transition: transform 0.3s ease;
+&:hover {
+
+    transform: translateY(-5px);
+
+    border-color: rgba(229, 9, 20, 0.3);
+
+  }
+
+  /* Dik l'9et3a li katkon f jnb dyal ticket */
+&::before, &::after {
+
+    content: '';
+
+    position: absolute;
+
+    top: 50%;
+
+    width: 20px;
+
+    height: 20px;
+
+    background-color: #15181f;
+
+    border-radius: 50%;
+
+    transform: translateY(-50%);
+
+  }
+&::before { left: -10px; }
+&::after { right: -10px; }
+
+  .ticket-header {
+
+    background-color: rgba(0,0,0,0.2);
+
+    padding: 1rem 1.5rem;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    border-bottom: 1px dashed #3f4555;
+
+    .ticket-id { font-weight: bold; color: #ffffff; }
+
+    .ticket-date { font-size: 0.85rem; color: #a0aabf; }
+
+  }
+
+  .ticket-body {
+
+    padding: 1.5rem;
+
+    .info-row {
+
+      display: flex;
+
+      justify-content: space-between;
+
+      margin-bottom: 0.8rem;
+&:last-child { margin-bottom: 0; }
+
+      .label { color: #8892a5; font-size: 0.9rem; }
+
+      .value { color: #ffffff; font-weight: 500; }
+
+      .highlight { color: #e50914; font-size: 1.1rem; font-weight: bold; }
+
+    }
+
+  }
+
+  .ticket-footer {
+
+    background-color: #e50914;
+
+    color: white;
+
+    text-align: center;
+
+    padding: 0.8rem;
+
+    font-weight: 600;
+
+    font-size: 0.9rem;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 8px;
+
+  }
+
+}
+
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+ 

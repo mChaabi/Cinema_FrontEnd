@@ -1,0 +1,38 @@
+<div class="reservation-wrapper">
+<div class="reservation-card">
+<!-- L'En-tête dyal l'formulaire -->
+<div class="card-header">
+<i class="bi bi-ticket-detailed-fill header-icon"></i>
+<h2>Réserver un Billet</h2>
+<p class="subtitle">Choisissez votre séance et le nombre de places</p>
+</div>
+<!-- L'Corps dyal l'formulaire -->
+<div class="card-body">
+<div class="form-group">
+<label for="seanceId">
+<i class="bi bi-film"></i> ID de la Séance
+</label>
+<div class="input-container">
+<input type="number" id="seanceId" [(ngModel)]="nouvelleReservation.seanceId" class="modern-input" placeholder="Ex: 12">
+</div>
+</div>
+<div class="form-group">
+<label for="nbrPlaces">
+<i class="bi bi-people-fill"></i> Nombre de places
+</label>
+<div class="input-container">
+<input type="number" id="nbrPlaces" [(ngModel)]="nouvelleReservation.nbrPlaces" class="modern-input" min="1" max="10">
+</div>
+</div>
+<!-- L'Bouton b l'icone -->
+<button class="btn-submit" (click)="validerReservation()">
+<i class="bi bi-check2-circle"></i> Confirmer la réservation
+</button>
+<!-- Message de confirmation ou d'erreur -->
+<div *ngIf="messageResultat" class="alert-message" [ngClass]="{'alert-success': isSuccess, 'alert-error': !isSuccess}">
+<i class="bi" [ngClass]="isSuccess ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'"></i>
+<span>{{ messageResultat }}</span>
+</div>
+</div>
+</div>
+</div>
