@@ -1,0 +1,126 @@
+@if (isOpen() && film(); as current) {
+  <div class="backdrop" (click)="onBackdropClick($event)" role="presentation">
+    <div
+      class="dialog"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-labelledby]="'film-title-' + (current.id ?? 'current')"
+    >
+      <button type="button" class="close" (click)="close()" aria-label="Fermer">×</button>
+
+      <div class="hero">
+        <img
+          [src]="getPosterUrl(current)"
+          [alt]="current.titre"
+          (error)="handlePosterError($event)"
+        />
+        <div class="hero-fade"></div>
+      </div>
+
+      <div class="panel">
+        <header class="header">
+          <div>
+            <p class="kicker">Fiche film</p>
+            <h2 [id]="'film-title-' + (current.id ?? 'current')">{{ current.titre }}</h2>
+          </div>
+          <app-film-star-rating [film]="current" />
+        </header>
+
+        <p class="synopsis">{{ getDescription(current) || getFullSynopsis(current) }}</p>
+
+        <section class="tech" aria-label="Informations techniques">
+          <h3>Informations techniques</h3>
+          <dl>
+            <div>
+              <dt>Durée</dt>
+              <dd>{{ formatDuration(current.duree) }}</dd>
+            </div>
+            <div>
+              <dt>Année</dt>
+              <dd>{{ getYearLabel(current) || '—' }}</dd>
+            </div>
+            <div>
+              <dt>Genre</dt>
+              <dd>{{ getGenreLabel(current) || '—' }}</dd>
+            </div>
+            <div>
+              <dt>Nationalité</dt>
+              <dd>{{ getNationalityLabel(current) || '—' }}</dd>
+            </div>
+            <div>
+              <dt>Réalisateur</dt>
+              <dd>{{ getDirectorLabel(current) || '—' }}</dd>
+            </div>
+            <div>
+              <dt>Acteurs</dt>
+              <dd>{{ actorsLabel(current) }}</dd>
+            </div>
+          </dl>
+        </section>
+
+        @if (current.seances?.length) {
+          <section>
+            <h3>Séances</h3>
+            <ul class="seances">
+              @for (seance of current.seances; track seance.id ?? $index) {
+                <li>{{ formatSeanceLabel(seance) }}</li>
+              }
+            </ul>
+          </section>
+        }
+
+        @if (videos().length) {
+          <section>
+            <h3>Bandes-annonces & vidéos</h3>
+            <div class="media-grid">
+              @for (video of videos(); track video.id ?? video.media) {
+                <div class="media-frame">
+                  @if (embedUrl(video); as embed) {
+                    <iframe
+                      [src]="embed"
+                      title="Bande-annonce"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen
+                    ></iframe>
+                  } @else {
+                    <video controls [src]="resolveMediaUrl(getMediaFilePath(video))"></video>
+                  }
+                </div>
+              }
+            </div>
+          </section>
+        }
+
+        @if (images().length) {
+          <section>
+            <h3>Médias visuels</h3>
+            <div class="gallery">
+              @for (image of images(); track image.id ?? image.media) {
+                <img
+                  [src]="resolveMediaUrl(getMediaFilePath(image))"
+                  [alt]="current.titre"
+                  (error)="handlePosterError($event)"
+                />
+              }
+            </div>
+          </section>
+        }
+
+        @if (documents().length) {
+          <section>
+            <h3>Documents</h3>
+            <ul class="docs">
+              @for (doc of documents(); track doc.id ?? doc.media) {
+                <li>
+                  <a [href]="resolveMediaUrl(getMediaFilePath(doc))" target="_blank" rel="noopener noreferrer">
+                    {{ getMediaFilePath(doc) || doc.media }}
+                  </a>
+                </li>
+              }
+            </ul>
+          </section>
+        }
+      </div>
+    </div>
+  </div>
+}

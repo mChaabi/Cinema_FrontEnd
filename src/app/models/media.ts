@@ -13,4 +13,6 @@ export interface Media {
   typeMedia?: TypeMedia;    // Utilisation de l'enum défini ci-dessus
   addedDate?: Date;         // Date d'ajout
   film?: Film;              // Le film auquel ce média est rattaché
+  url?: string;             // Alias DTO éventuel
+  chemin?: string;          // Alias DTO éventuel
 }

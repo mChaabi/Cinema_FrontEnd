@@ -1,0 +1,48 @@
+:host {
+  display: inline-flex;
+}
+
+.star-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.star {
+  border: 0;
+  background: transparent;
+  color: #334155;
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 1px;
+  transition: color 0.15s ease, transform 0.15s ease;
+
+  &:hover,
+  &:focus-visible {
+    transform: scale(1.12);
+    outline: none;
+  }
+
+  &.filled {
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.35);
+  }
+}
+
+.score {
+  margin-left: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #ffd700;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+
+  &.visible {
+    opacity: 1;
+  }
+}
+
+.compact .star {
+  font-size: 1.1rem;
+}

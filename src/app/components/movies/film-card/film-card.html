@@ -1,0 +1,48 @@
+<article class="card">
+  <div class="poster-wrap">
+    <img
+      [src]="getPosterUrl(film())"
+      [alt]="film().titre"
+      (error)="handlePosterError($event)"
+    />
+    @if (getGenreLabel(film())) {
+      <span class="genre">{{ getGenreLabel(film()) }}</span>
+    }
+  </div>
+
+  <div class="body">
+    <h3>{{ film().titre }}</h3>
+    @if (getYearLabel(film()) || formatDuration(film().duree) !== '—') {
+      <p class="meta">
+        @if (getYearLabel(film())) {
+          <span>{{ getYearLabel(film()) }}</span>
+        }
+        @if (getYearLabel(film()) && formatDuration(film().duree) !== '—') {
+          <span class="sep">·</span>
+        }
+        @if (formatDuration(film().duree) !== '—') {
+          <span>{{ formatDuration(film().duree) }}</span>
+        }
+      </p>
+    }
+    <p class="synopsis">{{ getShortSynopsis(film()) }}</p>
+    <app-film-star-rating [film]="film()" [compact]="true" />
+    <div class="card-actions">
+      <button type="button" class="btn-reviews" (click)="openReviews()" aria-label="Voir les avis">
+        <svg class="icon-bubble" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path
+            d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2z"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linejoin="round"
+          />
+        </svg>
+        Avis
+      </button>
+      <button type="button" class="btn-details" (click)="openDetails()">
+        Voir les détails
+      </button>
+    </div>
+  </div>
+</article>

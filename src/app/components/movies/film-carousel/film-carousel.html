@@ -1,0 +1,66 @@
+<section class="carousel" role="region" aria-roledescription="carousel" aria-label="Films en vedette">
+  @if (films().length === 0) {
+    <div class="carousel-empty">Aucun film en vedette pour le moment.</div>
+  } @else {
+    <div class="viewport" (mouseenter)="pause()" (mouseleave)="resume()">
+      <div class="track" [style.transform]="'translateX(-' + currentIndex() * 100 + '%)'">
+        @for (film of films(); track filmKey(film); let i = $index) {
+          <article class="slide" [attr.aria-hidden]="i !== currentIndex()">
+            <img
+              class="backdrop"
+              [src]="getPosterUrl(film)"
+              [alt]="film.titre"
+              (error)="handlePosterError($event)"
+            />
+            <div class="overlay"></div>
+            <div class="content">
+              <span class="badge">En vedette</span>
+              <h2>{{ film.titre }}</h2>
+              @if (getGenreLabel(film) || getYearLabel(film) || formatDuration(film.duree) !== '—') {
+                <p class="meta">
+                  @if (getGenreLabel(film)) {
+                    <span class="genre-tag">{{ getGenreLabel(film) }}</span>
+                  }
+                  @if (getYearLabel(film)) {
+                    <span>{{ getYearLabel(film) }}</span>
+                  }
+                  @if (formatDuration(film.duree) !== '—') {
+                    <span>{{ formatDuration(film.duree) }}</span>
+                  }
+                </p>
+              }
+              <p class="synopsis">{{ getShortSynopsis(film) }}</p>
+              <app-film-star-rating [film]="film" />
+              <button type="button" class="btn-details" (click)="openDetails(film)">
+                Voir les détails
+              </button>
+            </div>
+          </article>
+        }
+      </div>
+
+      @if (hasMultiple()) {
+        <button type="button" class="nav prev" (click)="previous()" aria-label="Film précédent">
+          ‹
+        </button>
+        <button type="button" class="nav next" (click)="next()" aria-label="Film suivant">
+          ›
+        </button>
+
+        <div class="dots" role="tablist" aria-label="Sélection du film en vedette">
+          @for (film of films(); track filmKey(film); let i = $index) {
+            <button
+              type="button"
+              class="dot"
+              role="tab"
+              [class.active]="i === currentIndex()"
+              [attr.aria-selected]="i === currentIndex()"
+              [attr.aria-label]="'Afficher ' + film.titre"
+              (click)="goTo(i)"
+            ></button>
+          }
+        </div>
+      }
+    </div>
+  }
+</section>

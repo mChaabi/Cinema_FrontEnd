@@ -1,0 +1,105 @@
+@if (isOpen() && film(); as current) {
+  <div class="backdrop" (click)="onBackdropClick($event)" role="presentation">
+    <div
+      class="dialog"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-labelledby]="'reviews-title-' + filmId()"
+    >
+      <button type="button" class="close" (click)="close()" aria-label="Fermer">×</button>
+
+      <header class="header">
+        <p class="kicker">Avis & commentaires</p>
+        <h2 [id]="'reviews-title-' + filmId()">{{ current.titre }}</h2>
+        <p class="subtitle">
+          {{ reviewCount() }} commentaire{{ reviewCount() > 1 ? 's' : '' }}
+        </p>
+      </header>
+
+      <div class="content">
+        <section class="form-section" aria-label="Ajouter un commentaire">
+          <h3>Nouvel avis</h3>
+
+          @if (submitSuccess()) {
+            <p class="success-banner" role="status">
+              Merci ! Votre commentaire a été publié.
+            </p>
+          }
+
+          <form class="review-form" (submit)="$event.preventDefault(); submitReview()">
+            <label class="field">
+              <span>Votre nom</span>
+              <input
+                type="text"
+                [value]="author()"
+                (input)="onAuthorInput($event)"
+                placeholder="Ex. Alex M."
+                maxlength="40"
+                autocomplete="name"
+              />
+            </label>
+
+            <div class="field">
+              <span>Votre note</span>
+              <app-review-star-input
+                [rating]="rating()"
+                (ratingChange)="rating.set($event); formError.set(null)"
+                label="Note pour ce film"
+              />
+            </div>
+
+            <label class="field">
+              <span>Votre commentaire</span>
+              <textarea
+                rows="4"
+                [value]="comment()"
+                (input)="onCommentInput($event)"
+                placeholder="Partagez votre ressenti sur ce film…"
+                maxlength="500"
+              ></textarea>
+            </label>
+
+            @if (formError(); as error) {
+              <p class="form-error" role="alert">{{ error }}</p>
+            }
+
+            <button type="submit" class="btn-submit">Publier mon avis</button>
+          </form>
+        </section>
+
+        <section class="list-section" aria-label="Commentaires existants">
+          <h3>Commentaires</h3>
+
+          @if (reviews().length === 0) {
+            <div class="empty-state">
+              <span class="empty-icon" aria-hidden="true">💬</span>
+              <p>Aucun commentaire pour l’instant.</p>
+              <p class="empty-hint">Soyez le premier à partager votre avis !</p>
+            </div>
+          } @else {
+            <ul class="review-list">
+              @for (review of reviews(); track review.id) {
+                <li class="review-item">
+                  <div class="review-head">
+                    <div>
+                      <p class="author">{{ review.author }}</p>
+                      <time [dateTime]="review.createdAt.toISOString()">
+                        {{ formatReviewDate(review.createdAt) }}
+                      </time>
+                    </div>
+                    <div class="review-stars" [attr.aria-label]="review.rating + ' sur 5'">
+                      @for (star of [1, 2, 3, 4, 5]; track star) {
+                        <span [class.filled]="star <= review.rating">★</span>
+                      }
+                    </div>
+                  </div>
+                  <p class="review-text">{{ review.comment }}</p>
+                </li>
+              }
+            </ul>
+          }
+        </section>
+      </div>
+    </div>
+  </div>
+}

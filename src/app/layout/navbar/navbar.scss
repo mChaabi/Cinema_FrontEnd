@@ -137,6 +137,58 @@ $text-muted: #94a3b8;
         }
       }
     }
+// Section Centre - Accueil & statut
+.navbar-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  max-width: 480px;
+}
+
+.welcome-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 6px 14px;
+  border: 1px solid $border-color;
+  border-radius: 20px;
+  background-color: $bg-search;
+}
+
+.welcome-text {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  color: $text-muted;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  strong {
+    color: $text-main;
+    font-weight: 600;
+  }
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba($primary-red, 0.12);
+  color: #ffd700;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+
+  .status-dot {
+    font-size: 0.45rem;
+    color: #22c55e;
   }
 }
 
@@ -265,5 +317,16 @@ $text-muted: #94a3b8;
         margin: 4px 0;
       }
     }
+  }
+}
+
+@media (max-width: 768px) {
+  .welcome-banner {
+    padding: 6px 10px;
+    gap: 8px;
+  }
+
+  .status-badge {
+    display: none;
   }
 }

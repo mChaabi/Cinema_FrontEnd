@@ -1,0 +1,119 @@
+<section class="movies">
+  <header class="page-header">
+    <p class="eyebrow">Catalogue</p>
+    <h1>Films à l'affiche</h1>
+    <p class="lede">Découvrez la sélection CineManager, notez vos films et consultez chaque fiche détaillée.</p>
+  </header>
+
+  @if (isLoading()) {
+    <div class="state">Chargement du catalogue…</div>
+  } @else if (errorMessage()) {
+    <div class="state error">
+      <p>{{ errorMessage() }}</p>
+      <button type="button" (click)="loadFilms()">Réessayer</button>
+    </div>
+  } @else if (films().length === 0) {
+    <div class="state">Aucun film n’est disponible pour le moment.</div>
+  } @else {
+    <app-film-carousel [films]="featuredFilms()" (viewDetails)="onViewDetails($event)" />
+
+    <section class="catalog">
+      <div class="catalog-head">
+        <h2>Tous les films</h2>
+        <p class="result-count">
+          {{ resultCount() }} film{{ resultCount() > 1 ? 's' : '' }}
+          @if (hasActiveFilters()) {
+            <span>· filtres actifs</span>
+          }
+        </p>
+      </div>
+
+      <div class="filter-toolbar" role="search">
+        <label class="search-field">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <input
+            type="search"
+            [value]="searchQuery()"
+            (input)="onSearchInput($event)"
+            placeholder="Rechercher par titre ou description…"
+            aria-label="Rechercher un film par titre ou description"
+          />
+        </label>
+
+        <div class="filter-row">
+          <select [value]="selectedGenre()" (change)="onGenreChange($event)" aria-label="Filtrer par genre">
+            <option value="all">Tous les genres</option>
+            @for (genre of genreOptions(); track genre) {
+              <option [value]="genre">{{ genre }}</option>
+            }
+          </select>
+
+          <select [value]="selectedYear()" (change)="onYearChange($event)" aria-label="Filtrer par année">
+            <option value="all">Toutes les années</option>
+            @for (year of yearOptions(); track year) {
+              <option [value]="year">{{ year }}</option>
+            }
+          </select>
+
+          @if (hasActiveFilters()) {
+            <button type="button" class="btn-clear" (click)="clearFilters()">Effacer</button>
+          }
+        </div>
+      </div>
+
+      @if (genreOptions().length) {
+        <div class="genre-chips" role="group" aria-label="Filtrer par genre">
+          <button
+            type="button"
+            class="chip"
+            [class.active]="selectedGenre() === 'all'"
+            (click)="selectGenre('all')"
+          >
+            Tous
+          </button>
+          @for (genre of genreOptions(); track genre) {
+            <button
+              type="button"
+              class="chip"
+              [class.active]="selectedGenre() === genre"
+              (click)="selectGenre(genre)"
+            >
+              {{ genre }}
+            </button>
+          }
+        </div>
+      }
+
+      @if (filteredFilms().length === 0) {
+        <div class="state compact">
+          <p>Aucun film ne correspond à votre recherche.</p>
+          @if (hasActiveFilters()) {
+            <button type="button" class="btn-clear" (click)="clearFilters()">Réinitialiser les filtres</button>
+          }
+        </div>
+      } @else {
+        <div class="grid">
+          @for (film of filteredFilms(); track filmKey(film)) {
+            <app-film-card
+              [film]="film"
+              (viewDetails)="onViewDetails($event)"
+              (viewReviews)="onViewReviews($event)"
+            />
+          }
+        </div>
+      }
+    </section>
+  }
+
+  <app-film-details-modal
+    [film]="selectedFilm()"
+    [isOpen]="isModalOpen()"
+    (closed)="onModalClosed()"
+  />
+
+  <app-film-reviews
+    [film]="reviewsFilm()"
+    [isOpen]="isReviewsOpen()"
+    (closed)="onReviewsClosed()"
+  />
+</section>

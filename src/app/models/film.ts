@@ -16,4 +16,11 @@ export interface Film {
   seances?: Seance[];           // Liste des séances associées (OneToMany)
   medias?: Media[];             // Liste des médias / affiches associés (OneToMany)
   addedDate?: Date;             // Date d'ajout en base de données
+  description?: string;         // Synopsis / description renvoyée par l'API ou le DTO
+  image?: string;               // URL ou chemin d'affiche (alias DTO)
+  imageUrl?: string;            // Alias fréquent pour l'affiche
+  poster?: string;              // Alias fréquent pour l'affiche
+  posterUrl?: string;           // Alias fréquent pour l'affiche
+  affiche?: string;             // Alias francophone pour l'affiche
+  note?: number;                // Note moyenne éventuelle (sur 5)
 }

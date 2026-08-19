@@ -1,0 +1,27 @@
+<div
+  class="star-rating"
+  [class.compact]="compact()"
+  role="radiogroup"
+  [attr.aria-label]="'Note pour ' + film().titre"
+>
+  @for (star of stars; track star) {
+    <button
+      type="button"
+      class="star"
+      role="radio"
+      [class.filled]="star <= displayValue()"
+      [attr.aria-checked]="star === currentRating()"
+      [attr.aria-label]="star + ' sur 5'"
+      (mouseenter)="hover(star)"
+      (mouseleave)="hover(0)"
+      (focus)="hover(star)"
+      (blur)="hover(0)"
+      (click)="rate(star)"
+    >
+      ★
+    </button>
+  }
+  <span class="score" [class.visible]="currentRating() > 0">
+    {{ currentRating() }}/5
+  </span>
+</div>

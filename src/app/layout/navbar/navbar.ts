@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule],
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.scss']
 })
@@ -43,6 +43,8 @@ export class NavbarComponent {
 
   onGenreChange(): void {
     console.log('Filtre genre changé :', this.selectedGenreId);
+  get firstName(): string {
+    return this.currentUser.name.split(' ')[0] ?? this.currentUser.name;
   }
 
   onToggleSidebar(): void {

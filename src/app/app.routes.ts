@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout';
 import { AuthComponent } from './components/auth/auth';
 import { DashboardComponent } from './components/dashboard/dashboard';
+import { MoviesComponent } from './components/movies/movies';
 
 export const routes: Routes = [
     {
@@ -16,11 +17,13 @@ export const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       
       // 2. Déclarer la route /dashboard
-      { path: 'dashboard', component: DashboardComponent }
+      { path: 'dashboard', component: DashboardComponent },
+      { path: '', pathMatch: 'full', component: MoviesComponent },
+      { path: 'films/a-laffiche', component: MoviesComponent }
     ]
   },
-  { 
-    path: '**', 
-    redirectTo: '' 
+  {
+    path: '**',
+    redirectTo: ''
   }
 ];
