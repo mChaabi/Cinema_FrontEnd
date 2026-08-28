@@ -1,3 +1,4 @@
+import 'zone.js';
 import { BootstrapContext, bootstrapApplication } from '@angular/platform-browser';
 import { App } from './app/app';
 import 'zone.js/node';

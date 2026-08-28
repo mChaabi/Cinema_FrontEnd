@@ -36,4 +36,13 @@ body {
   margin: 0;
   height: 100%;
 }
+body, html {
+ -ms-overflow-style: none; /* L'navigateur Edge w IE */
+ scrollbar-width: none; /* L'navigateur Firefox */
+}
+body::-webkit-scrollbar,
+html::-webkit-scrollbar,
+*::-webkit-scrollbar {
+ display: none; /* L'navigateur Google Chrome w Safari */
+}
 /* You can add global styles to this file, and also import other style files */
