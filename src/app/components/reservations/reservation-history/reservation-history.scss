@@ -1,0 +1,80 @@
+.history-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+
+  h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+  }
+
+  .reservations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    .reservation-card {
+      background: white;
+      border-radius: 8px;
+      padding: 15px 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-left: 5px solid #3498db;
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #ecf0f1;
+        padding-bottom: 8px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        color: #34495e;
+      }
+
+      .card-body {
+        margin-bottom: 15px;
+        
+        .seats-info {
+          margin-top: 8px;
+          display: flex;
+          gap: 5px;
+          align-items: center;
+          flex-wrap: wrap;
+
+          .badge {
+            background: #2ecc71;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+          }
+        }
+      }
+
+      .card-footer {
+        display: flex;
+        justify-content: flex-end;
+
+        .btn-cancel {
+          background-color: #e74c3c;
+          color: white;
+          border: none;
+          padding: 6px 12px;
+          border-radius: 4px;
+          cursor: pointer;
+
+          &:hover {
+            background-color: #c0392b;
+          }
+        }
+      }
+    }
+  }
+
+  .loading, .empty, .error {
+    text-align: center;
+    padding: 30px;
+    color: #7f8c8d;
+    font-size: 16px;
+  }
+  .error { color: #e74c3c; }
+}

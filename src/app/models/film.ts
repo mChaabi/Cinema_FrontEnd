@@ -23,4 +23,5 @@ export interface Film {
   posterUrl?: string;           // Alias fréquent pour l'affiche
   affiche?: string;             // Alias francophone pour l'affiche
   note?: number;                // Note moyenne éventuelle (sur 5)
+  photoUrl?: string;
 }

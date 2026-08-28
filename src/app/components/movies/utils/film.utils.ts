@@ -32,6 +32,7 @@ interface FilmLike extends Film {
   rating?: number;
   director?: Personne | string;
   actors?: Array<Personne | string>;
+   photoUrl?: string;
 }
 
 export function filmKey(film: Film): string {
@@ -78,6 +79,7 @@ export function getPosterUrl(film: Film): string {
     asTrimmedString(film.poster) ||
     asTrimmedString(film.posterUrl) ||
     asTrimmedString(film.affiche);
+    asTrimmedString((film as FilmLike).photoUrl);
 
   if (direct) {
     return resolveMediaUrl(direct);
@@ -298,6 +300,7 @@ export function normalizeFilm(raw: Film): Film {
     asTrimmedString(source.poster) ||
     asTrimmedString(source.posterUrl) ||
     asTrimmedString(source.affiche);
+     asTrimmedString(source.photoUrl);
   const note = source.note ?? source.rating;
   const annee = source.annee ?? source.year ?? raw.annee;
   const duree = source.duree ?? source.duration ?? raw.duree;

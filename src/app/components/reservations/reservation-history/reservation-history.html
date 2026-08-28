@@ -1,0 +1,34 @@
+<div class="history-container">
+  <h2>Mis Reservas y Billetes</h2>
+
+  <div *ngIf="isLoading" class="loading">Cargando tus reservas...</div>
+
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+  <div *ngIf="!isLoading && reservations.length === 0" class="empty">
+    <p>Aún no tienes ninguna reserva realizada.</p>
+  </div>
+
+  <div class="reservations-list" *ngIf="!isLoading && reservations.length > 0">
+    <div class="reservation-card" *ngFor="let res of reservations">
+      <div class="card-header">
+        <span class="reservation-id">Reserva #{{ res.id }}</span>
+        <span class="date">{{ res.dateReservation | date:'short' }}</span>
+      </div>
+
+      <div class="card-body">
+        <p><strong>ID Sesión:</strong> {{ res.seanceId }}</p>
+        <p><strong>Nº de Plazas:</strong> {{ res.nbrPlaces }}</p>
+        
+        <div class="seats-info">
+          <strong>Asientos:</strong>
+          <span class="badge" *ngFor="let siege of res.sieges">{{ siege.numero }}</span>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <button class="btn-cancel" (click)="cancelReservation(res.id)">Cancelar Reserva</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<div class="seat-selector-container">
+  <h3>Selecciona tus asientos</h3>
+  
+  <!-- Leyenda -->
+  <div class="legend">
+    <span class="badge available">Disponible</span>
+    <span class="badge selected">Seleccionado</span>
+    <span class="badge reserved">Ocupado</span>
+  </div>
+
+  <!-- Pantalla de cine de referencia -->
+  <div class="screen">PANTALLA</div>
+
+  <!-- Grid de Asientos -->
+  <div class="seats-grid">
+    <button 
+      type="button"
+      *ngFor="let siege of sieges"
+      class="seat-btn"
+      [ngClass]="{
+        'reserved': siege.isReserved,
+        'selected': isSelected(siege),
+        'available': !siege.isReserved && !isSelected(siege)
+      }"
+      [disabled]="siege.isReserved"
+      (click)="toggleSeat(siege)">
+      {{ siege.numero }}
+    </button>
+  </div>
+
+  <!-- Resumen de selección -->
+  <div class="selection-summary" *ngIf="selectedSieges.length > 0">
+    <p>Asientos seleccionados: <strong>{{ selectedSieges.length }}</strong></p>
+    <p>Total a pagar: <strong>{{ totalAmount }} DH</strong></p>
+  </div>
+</div>

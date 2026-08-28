@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Film } from './film';
+import { SeatSelector } from './seat-selector';
 
-describe('Film', () => {
-  let component: Film;
-  let fixture: ComponentFixture<Film>;
+describe('SeatSelector', () => {
+  let component: SeatSelector;
+  let fixture: ComponentFixture<SeatSelector>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Film],
+      imports: [SeatSelector],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Film);
+    fixture = TestBed.createComponent(SeatSelector);
     component = fixture.componentInstance;
-    await fixture.whenStable();
+    fixture.detectChanges();
   });
 
   it('should create', () => {
