@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { UserService } from '../../services/user';
 
 @Component({
   selector: 'app-auth',
@@ -11,30 +12,58 @@ import { Router } from '@angular/router';
   styleUrls: ['./auth.scss']
 })
 export class AuthComponent {
-  isLoginMode = true; // Bascule entre Connexion et Inscription
+  isLoginMode = true;
+  errorMessage = '';
 
-  // Modèle aligné avec l'entité Java (User.java)
   authData = {
     username: '',
     email: '',
     password: ''
   };
 
-  constructor(private router: Router) {}
+  private router = inject(Router);
+  private userService = inject(UserService);
 
   toggleMode(): void {
     this.isLoginMode = !this.isLoginMode;
+    this.errorMessage = '';
   }
 
-  onSubmit(): void {
-    if (this.isLoginMode) {
-      console.log('Connexion de :', this.authData.username, this.authData.password);
-      // Logique d'authentification puis redirection
-      this.router.navigate(['/']);
-    } else {
-      console.log('Inscription de :', this.authData);
-      // Logique d'enregistrement de l'utilisateur
-      this.isLoginMode = true;
-    }
+ onSubmit(): void {
+  this.errorMessage = '';
+
+  if (this.isLoginMode) {
+    // LOGIN
+    this.userService.login({
+      username: this.authData.username,
+      password: this.authData.password
+    }).subscribe({
+      next: (user) => {
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        // Captura el mensaje en JSON o en texto plano
+        this.errorMessage = err.error?.message || 
+                            (typeof err.error === 'string' ? err.error : null) || 
+                            "Nom d'utilisateur ou mot de passe incorrect.";
+      }
+    });
+
+  } else {
+    // REGISTRO
+    this.userService.createUser(this.authData as any).subscribe({
+      next: (userCree) => {
+        alert('Compte créé avec succès ! Vous pouvez maintenant vous connecter.');
+        this.isLoginMode = true;
+        this.authData = { username: '', email: '', password: '' };
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.message || 
+                            (typeof err.error === 'string' ? err.error : null) || 
+                            "Erreur lors de la création du compte.";
+      }
+    });
   }
+}
 }

@@ -7,25 +7,27 @@
         <span class="brand-title">Cine<span class="highlight">Manager</span></span>
       </div>
       <h2>{{ isLoginMode ? 'Bienvenue !' : 'Créer un compte' }}</h2>
-      <p>{{ isLoginMode ? 'Connectez-vous pour accéder à vos réservations.' : 'Remplissez le formulaire pour rejoindre CineManager.' }}</p>
+      <p>{{ isLoginMode ? 'Connectez-vous pour accéder à vos réservations.' : 'Remplissez le formulaire pour rejoindre
+        CineManager.' }}</p>
+    </div>
+
+    <!-- ⚠️ ALERTA DE ERROR (Añadida aquí para mayor visibilidad) -->
+    <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+      <span class="alert-icon">⚠️</span>
+      <span class="alert-text">{{ errorMessage }}</span>
+      <button type="button" class="alert-close" (click)="errorMessage = ''">×</button>
     </div>
 
     <!-- Formulaire d'authentification -->
     <form (ngSubmit)="onSubmit()" #authForm="ngForm">
-      
+
       <!-- Champ Nom d'utilisateur (Username) -->
       <div class="form-group">
         <label for="username">Nom d'utilisateur</label>
         <div class="input-wrapper">
           <i class="bi bi-person"></i>
-          <input 
-            type="text" 
-            id="username" 
-            name="username" 
-            [(ngModel)]="authData.username" 
-            required 
-            placeholder="Ex: mchaabi" 
-          />
+          <input type="text" id="username" name="username" [(ngModel)]="authData.username" required
+            placeholder="Ex: mchaabi" />
         </div>
       </div>
 
@@ -34,15 +36,8 @@
         <label for="email">Adresse E-mail</label>
         <div class="input-wrapper">
           <i class="bi bi-envelope"></i>
-          <input 
-            type="email" 
-            id="email" 
-            name="email" 
-            [(ngModel)]="authData.email" 
-            required 
-            email 
-            placeholder="exemple@cinema.com" 
-          />
+          <input type="email" id="email" name="email" [(ngModel)]="authData.email" required email
+            placeholder="exemple@cinema.com" />
         </div>
       </div>
 
@@ -51,14 +46,8 @@
         <label for="password">Mot de passe</label>
         <div class="input-wrapper">
           <i class="bi bi-lock"></i>
-          <input 
-            type="password" 
-            id="password" 
-            name="password" 
-            [(ngModel)]="authData.password" 
-            required 
-            placeholder="••••••••" 
-          />
+          <input type="password" id="password" name="password" [(ngModel)]="authData.password" required
+            placeholder="••••••••" />
         </div>
       </div>
 
@@ -71,11 +60,11 @@
     <!-- Pied de carte pour basculer de mode -->
     <div class="auth-footer">
       <p *ngIf="isLoginMode">
-        Vous n'avez pas de compte ? 
+        Vous n'avez pas de compte ?
         <a href="javascript:void(0)" (click)="toggleMode()">S'inscrire</a>
       </p>
       <p *ngIf="!isLoginMode">
-        Vous avez déjà un compte ? 
+        Vous avez déjà un compte ?
         <a href="javascript:void(0)" (click)="toggleMode()">Se connecter</a>
       </p>
     </div>

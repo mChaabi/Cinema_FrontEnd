@@ -36,4 +36,8 @@ export class UserService {
   deleteUser(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  login(credentials: { username: string; password: string }): Observable<User> {
+  return this.http.post<User>(`${this.apiUrl}/login`, credentials);
+}
 }
