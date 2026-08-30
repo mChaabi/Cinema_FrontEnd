@@ -1,0 +1,26 @@
+<section class="genres-page">
+  <header class="page-header">
+    <p class="eyebrow">Catalogue</p>
+    <h1>Genres & Origines</h1>
+    <p class="lede">Explorez notre catalogue par genre cinématographique.</p>
+  </header>
+
+  @if (isLoading()) {
+  <div class="state">Chargement…</div>
+  } @else if (genres().length === 0) {
+  <div class="state">Aucun genre disponible pour le moment.</div>
+  } @else {
+  <div class="genre-grid">
+    @for (genre of genres(); track genre.id) {
+    <button type="button" class="genre-tile" (click)="goToGenre(genre.libelle)">
+      <!-- Usamos la función para cambiar la foto dinámicamente -->
+      <img [src]="getGenreImage(genre.libelle)" [alt]="genre.libelle" />
+      <div class="overlay"></div>
+      <div class="tile-content">
+        <h3>{{ genre.libelle }}</h3>
+      </div>
+    </button>
+    }
+  </div>
+  }
+</section>

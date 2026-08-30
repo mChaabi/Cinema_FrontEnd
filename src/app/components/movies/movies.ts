@@ -17,6 +17,7 @@ import { FilmDetailsModalComponent } from './film-details-modal/film-details-mod
 import { FilmReviewsComponent } from './reviews/film-reviews.component';
 import { getFallbackFilms } from './utils/film.fallback';
 import { filmKey, getGenreLabel, matchesFilmQuery, mergeFilms, normalizeFilm } from './utils/film.utils';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-movies',
@@ -29,6 +30,7 @@ import { filmKey, getGenreLabel, matchesFilmQuery, mergeFilms, normalizeFilm } f
 export class MoviesComponent {
   private readonly filmService = inject(FilmService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly route = inject(ActivatedRoute);
 
   readonly films = signal<Film[]>([]);
   readonly isLoading = signal(true);
@@ -45,7 +47,7 @@ export class MoviesComponent {
   readonly featuredFilms = computed(() => this.films().slice(0, 5));
 
   readonly genreOptions = computed(() => {
-    const labels = this.films().map(getGenreLabel).filter(Boolean);
+    const labels = this.films().map(film => getGenreLabel(film)).filter(Boolean);
     return [...new Set(labels)].sort((a, b) => a.localeCompare(b, 'fr'));
   });
 
@@ -82,6 +84,12 @@ export class MoviesComponent {
 
   constructor() {
     afterNextRender(() => this.loadFilms());
+
+    this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      if (params['genre']) {
+        this.selectedGenre.set(params['genre']);
+      }
+    });
   }
 
   loadFilms(): void {

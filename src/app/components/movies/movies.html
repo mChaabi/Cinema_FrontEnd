@@ -13,7 +13,7 @@
       <button type="button" (click)="loadFilms()">Réessayer</button>
     </div>
   } @else if (films().length === 0) {
-    <div class="state">Aucun film n’est disponible pour le moment.</div>
+    <div class="state">Aucun film n'est disponible pour le moment.</div>
   } @else {
     <app-film-carousel [films]="featuredFilms()" (viewDetails)="onViewDetails($event)" />
 
@@ -28,6 +28,7 @@
         </p>
       </div>
 
+      <!-- Barre de recherche + filtre année uniquement -->
       <div class="filter-toolbar" role="search">
         <label class="search-field">
           <span class="search-icon" aria-hidden="true">⌕</span>
@@ -41,13 +42,6 @@
         </label>
 
         <div class="filter-row">
-          <select [value]="selectedGenre()" (change)="onGenreChange($event)" aria-label="Filtrer par genre">
-            <option value="all">Tous les genres</option>
-            @for (genre of genreOptions(); track genre) {
-              <option [value]="genre">{{ genre }}</option>
-            }
-          </select>
-
           <select [value]="selectedYear()" (change)="onYearChange($event)" aria-label="Filtrer par année">
             <option value="all">Toutes les années</option>
             @for (year of yearOptions(); track year) {
@@ -61,6 +55,7 @@
         </div>
       </div>
 
+      <!-- Genre : uniquement les chips, plus de select redondant -->
       @if (genreOptions().length) {
         <div class="genre-chips" role="group" aria-label="Filtrer par genre">
           <button

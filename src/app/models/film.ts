@@ -10,8 +10,11 @@ export interface Film {
   duree: number;                // Durée du film en minutes
   annee: number;                // Année de sortie du film
   genre?: Genre;                // Objet Genre associé (ManyToOne)
+  genreLibelle?: string;
   nationalite?: Nationalite;    // Objet Nationalite associé (ManyToOne)
+  nationaliteLibelle?: string;
   realisateur?: Personne;       // Réalisateur du film (Personne liée via DIRECTOR_ID)
+  realisateurNomComplet?: string;
   acteurs?: Personne[];         // Liste des acteurs du film (ManyToMany)
   seances?: Seance[];           // Liste des séances associées (OneToMany)
   medias?: Media[];             // Liste des médias / affiches associés (OneToMany)
@@ -24,4 +27,5 @@ export interface Film {
   affiche?: string;             // Alias francophone pour l'affiche
   note?: number;                // Note moyenne éventuelle (sur 5)
   photoUrl?: string;
+  dateSortie?: string;
 }

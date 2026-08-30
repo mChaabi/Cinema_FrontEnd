@@ -1,10 +1,23 @@
-<article class="card">
+<article class="card" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
   <div class="poster-wrap">
     <img
       [src]="getPosterUrl(film())"
       [alt]="film().titre"
       (error)="handlePosterError($event)"
+      [class.hidden]="isHovering() && previewVideoUrl"
     />
+
+    @if (previewVideoUrl) {
+      <video
+        #previewVideo
+        [src]="previewVideoUrl"
+        muted
+        loop
+        playsinline
+        [class.visible]="isHovering()"
+      ></video>
+    }
+
     @if (getGenreLabel(film())) {
       <span class="genre">{{ getGenreLabel(film()) }}</span>
     }
@@ -30,13 +43,7 @@
     <div class="card-actions">
       <button type="button" class="btn-reviews" (click)="openReviews()" aria-label="Voir les avis">
         <svg class="icon-bubble" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path
-            d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2z"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linejoin="round"
-          />
+          <path d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
         </svg>
         Avis
       </button>

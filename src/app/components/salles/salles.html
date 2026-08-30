@@ -1,0 +1,52 @@
+<section class="salles-page">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Gestion</p>
+      <h1>Salles de projection</h1>
+      <p class="lede">{{ salles().length }} salle{{ salles().length > 1 ? 's' : '' }} · Capacité totale : {{ totalCapacite() }} places</p>
+    </div>
+    <button type="button" class="btn-primary" (click)="openCreate()">+ Nouvelle salle</button>
+  </header>
+
+  @if (isLoading()) {
+    <div class="state">Chargement…</div>
+  } @else if (salles().length === 0) {
+    <div class="state">Aucune salle enregistrée pour le moment.</div>
+  } @else {
+    <div class="salles-grid">
+      @for (salle of salles(); track salle.id) {
+        <div class="salle-card">
+          <div class="salle-icon">🎬</div>
+          <h3>Salle N° {{ salle.numero }}</h3>
+          <p class="capacite">Capacité : <strong>{{ salle.capacite }}</strong> places</p>
+          <div class="card-actions">
+            <button type="button" (click)="openEdit(salle)">✏️ Modifier</button>
+            <button type="button" class="btn-del" (click)="remove(salle.id!)">🗑️ Supprimer</button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  @if (showModal()) {
+    <div class="modal-backdrop" (click)="closeModal()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>{{ editingId() ? 'Modifier la salle' : 'Nouvelle salle' }}</h3>
+        <form [formGroup]="salleForm" (ngSubmit)="save()">
+          <label class="field">
+            <span>Numéro de salle</span>
+            <input type="number" formControlName="numero" min="1" />
+          </label>
+          <label class="field">
+            <span>Capacité (places)</span>
+            <input type="number" formControlName="capacite" min="1" />
+          </label>
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" (click)="closeModal()">Annuler</button>
+            <button type="submit" class="btn-primary" [disabled]="salleForm.invalid">Enregistrer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</section>

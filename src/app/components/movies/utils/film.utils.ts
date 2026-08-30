@@ -79,11 +79,20 @@ export function getPosterUrl(film: Film): string {
     asTrimmedString(film.poster) ||
     asTrimmedString(film.posterUrl) ||
     asTrimmedString(film.affiche);
-    asTrimmedString((film as FilmLike).photoUrl);
+     asTrimmedString((film as FilmLike).photoUrl);
 
   if (direct) {
     return resolveMediaUrl(direct);
   }
+const videos = getVideoMedias(film);
+  for (const video of videos) {
+    const path = getMediaFilePath(video);
+    const auto = getAutoThumbnail(path);
+    if (auto) {
+      return auto;
+    }
+  }
+
 
   const images = getImageMedias(film);
   const fromImage = getMediaFilePath(images[0]);
@@ -94,6 +103,7 @@ export function getPosterUrl(film: Film): string {
   const fallback = getMediaFilePath(film.medias?.[0]);
   return fallback ? resolveMediaUrl(fallback) : POSTER_PLACEHOLDER;
 }
+
 
 export function getImageMedias(film: Film): Media[] {
   return (film.medias ?? []).filter((media) => {
@@ -115,21 +125,11 @@ export function getDocumentMedias(film: Film): Media[] {
 }
 
 export function formatDuration(minutes: number | undefined | null): string {
-  if (minutes == null || minutes <= 0) {
-    return '—';
-  }
-
+  if (minutes == null || minutes <= 0) return '—';
   const hours = Math.floor(minutes / 60);
   const remaining = minutes % 60;
-
-  if (hours === 0) {
-    return `${remaining} min`;
-  }
-
-  if (remaining === 0) {
-    return `${hours} h`;
-  }
-
+  if (hours === 0) return `${remaining} min`;
+  if (remaining === 0) return `${hours} h`;
   return `${hours} h ${remaining} min`;
 }
 
@@ -145,39 +145,31 @@ export function personFullName(personne: Personne | string | undefined | null): 
   return [personne.prenom, personne.nom].filter(Boolean).join(' ').trim();
 }
 
-export function getGenreLabel(film: Film): string {
-  const genre = film.genre as (Genre & { nom?: string; name?: string }) | string | undefined;
-  if (!genre) {
-    return '';
-  }
-
-  if (typeof genre === 'string') {
-    return genre.trim();
-  }
-
-  return asTrimmedString(genre.libelle) || asTrimmedString(genre.nom) || asTrimmedString(genre.name) || '';
+// Exemple pour le genre
+export function getGenreLabel(film: Film, genres: any[] = []): string {
+  if (film.genreLibelle) return film.genreLibelle; // Si ton backend l'envoie directement
+  if (!film.genre) return '—';
+  const found = genres.find(g => g.id === film.genre);
+  return found ? found.libelle : '—';
 }
 
-export function getNationalityLabel(film: Film): string {
-  const nationality = film.nationalite as (Nationalite & { nom?: string; name?: string }) | string | undefined;
-  if (!nationality) {
-    return '';
-  }
-
-  if (typeof nationality === 'string') {
-    return nationality.trim();
-  }
-
-  return (
-    asTrimmedString(nationality.libelle) ||
-    asTrimmedString(nationality.nom) ||
-    asTrimmedString(nationality.name) ||
-    ''
-  );
+export function getNationaliteLabel(film: Film, nationalites: any[] = []): string {
+  if (film.nationaliteLibelle) return film.nationaliteLibelle;
+  if (!film.nationalite) return '—';
+  const found = nationalites.find(n => n.id === film.nationalite);
+  return found ? found.libelle : '—';
 }
 
 export function getDirectorLabel(film: Film): string {
   return personFullName(film.realisateur) || personFullName((film as FilmLike).director);
+}
+
+// Exemple pour le réalisateur
+export function getRealisateurLabel(film: Film, realisateurs: any[] = []): string {
+  if (film.realisateurNomComplet) return film.realisateurNomComplet;
+  if (!film.realisateur) return '—';
+  const found = realisateurs.find(r => r.id === film.realisateur);
+  return found ? `${found.prenom} ${found.nom}` : '—';
 }
 
 export function getActorsLabel(film: Film): string {
@@ -228,7 +220,7 @@ export function getFullSynopsis(film: Film): string {
   const year = getYearLabel(film) ? ` sorti en ${getYearLabel(film)}` : '';
   const director = getDirectorLabel(film) ? `, réalisé par ${getDirectorLabel(film)}` : '';
   const duration = formatDuration(film.duree) !== '—' ? ` Durée : ${formatDuration(film.duree)}.` : '';
-  const nationality = getNationalityLabel(film) ? ` Nationalité : ${getNationalityLabel(film)}.` : '';
+  const nationality = getNationaliteLabel(film) ? ` Nationalité : ${getNationaliteLabel(film)}.` : '';
   const cast = getActorsLabel(film) ? ` Avec ${getActorsLabel(film)}.` : '';
 
   return `${title} est${genre}${year}${director}.${duration}${nationality}${cast}`
@@ -274,12 +266,46 @@ export function formatSeanceLabel(seance: Seance): string {
 }
 
 export function youtubeEmbedUrl(url: string | undefined | null): string | null {
-  if (!url) {
-    return null;
+  const ytId = extractYoutubeId(url);
+  return ytId ? `https://www.youtube.com/embed/${ytId}` : null;
+}
+
+export function extractYoutubeId(url: string | undefined | null): string | null {
+  if (!url) return null;
+  const match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/);
+  return match?.[1] ?? null;
+}
+
+export function extractVimeoId(url: string | undefined | null): string | null {
+  if (!url) return null;
+  const match = url.match(/vimeo\.com\/(\d+)/);
+  return match?.[1] ?? null;
+}
+
+export function extractDailymotionId(url: string | undefined | null): string | null {
+  if (!url) return null;
+  const match = url.match(/dailymotion\.com\/video\/([a-zA-Z0-9]+)/);
+  return match?.[1] ?? null;
+}
+
+export function getAutoThumbnail(url: string | undefined | null): string | null {
+  const ytId = extractYoutubeId(url);
+  if (ytId) {
+    return `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
   }
 
-  const match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/);
-  return match?.[1] ? `https://www.youtube.com/embed/${match[1]}` : null;
+  const dmId = extractDailymotionId(url);
+  if (dmId) {
+    return `https://www.dailymotion.com/thumbnail/video/${dmId}`;
+  }
+
+  // Vimeo no tiene URL directa de miniatura por ID (requiere su API oEmbed);
+  // se resuelve aparte en el Paso 2 más abajo.
+  return null;
+}
+
+export function isVimeoUrl(url: string | undefined | null): boolean {
+  return !!url && /vimeo\.com\/\d+/.test(url);
 }
 
 export function handlePosterError(event: Event): void {

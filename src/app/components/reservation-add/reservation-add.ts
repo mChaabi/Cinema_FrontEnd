@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ReservationService } from '../../services/reservation';
-import { Reservation } from '../../models/reservation';
+import { Reservation, ReservationRequestDto } from '../../models/reservation';
 @Component({
  selector: 'app-reservation-add',
  standalone: true,
@@ -11,11 +11,13 @@ import { Reservation } from '../../models/reservation';
  styleUrls: ['./reservation-add.scss']
 })
 export class ReservationAddComponent implements OnInit {
- nouvelleReservation: Reservation = {
-   seanceId: 0,
-   customerId: 1,
-   nbrPlaces: 1
- };
+// En lugar de usar 'Reservation', usa el DTO de creación:
+nouvelleReservation: ReservationRequestDto = {
+  seanceId: 0,
+  customerId: 1,
+  nbrPlaces: 1,
+  siegeIds: []
+};
  messageResultat: string = '';
  isSuccess: boolean = false;
  constructor(private reservationService: ReservationService) {}

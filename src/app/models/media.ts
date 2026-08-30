@@ -15,4 +15,5 @@ export interface Media {
   film?: Film;              // Le film auquel ce média est rattaché
   url?: string;             // Alias DTO éventuel
   chemin?: string;          // Alias DTO éventuel
+  thumbnailUrl?: string; 
 }

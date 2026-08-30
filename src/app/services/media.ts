@@ -30,4 +30,12 @@ export class MediaService {
   deleteMedia(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  uploadMedia(file: File, filmId: number, typeMedia: string) {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('filmId', filmId.toString());
+  formData.append('typeMedia', typeMedia);
+  return this.http.post(`${this.apiUrl}/upload`, formData);
+}
 }

@@ -11,9 +11,9 @@
   </div>
 
   <!-- Centre : Select Genre + Barre de recherche -->
-  <div class="navbar-center">
+  <div class="navbar-center-search">
     <div class="search-group">
-      <!-- Select des genres statiques -->
+      <!-- Select des genres dynamiques -->
       <select 
         [(ngModel)]="selectedGenreId" 
         (change)="onGenreChange()" 
@@ -21,13 +21,14 @@
       >
         <option value="">Tous les genres</option>
         <option *ngFor="let g of genres" [value]="g.id">
-          {{ g.nom }}
+          {{ g.libelle }}
         </option>
       </select>
 
+      
       <!-- Champ de recherche -->
       <div class="search-box">
-        <i class="bi bi-search search-icon"></i>
+        <i class="bi bi-search search-icon" (click)="onSearch()" style="cursor: pointer;"></i>
         <input 
           type="text" 
           [(ngModel)]="searchQuery" 
@@ -39,7 +40,7 @@
   </div>
 
   <!-- Centre : Accueil & statut -->
-  <div class="navbar-center">
+  <div class="navbar-center-welcome">
     <div class="welcome-banner">
       <p class="welcome-text">
         Bonjour, <strong>{{ firstName }}</strong>

@@ -1,13 +1,11 @@
 <div class="dashboard-container">
-  
-  <!-- Loader pendant le chargement des données -->
+
   <div *ngIf="isLoading" class="loading-spinner">
     <div class="spinner"></div>
     <p>Chargement des données en cours...</p>
   </div>
 
   <ng-container *ngIf="!isLoading">
-    <!-- En-tête -->
     <div class="dashboard-header">
       <div>
         <h1 class="page-title">Tableau de Bord</h1>
@@ -18,7 +16,7 @@
       </button>
     </div>
 
-    <!-- Cartes KPI Dynamiques -->
+    <!-- KPI Cards -->
     <div class="kpi-grid">
       <div *ngFor="let stat of stats" class="kpi-card">
         <div class="kpi-info">
@@ -34,30 +32,34 @@
       </div>
     </div>
 
-    <!-- Section Graphiques & Analytiques Dynamiques -->
+    <!-- Analytics -->
     <div class="analytics-grid">
-      <!-- Répartition par Genre -->
-      <div class="dashboard-card genres-card">
+
+      <!-- Donut : Répartition par Genre -->
+      <div class="dashboard-card">
         <div class="card-header">
           <h3><i class="bi bi-pie-chart"></i> Répartition par Genre</h3>
         </div>
-        <div class="genres-list">
-          <div *ngFor="let genre of genreStats" class="genre-item">
-            <div class="genre-label">
-              <span>{{ genre.name }}</span>
-              <span class="count">{{ genre.count }} film(s) ({{ genre.percentage }}%)</span>
-            </div>
-            <div class="progress-bar-bg">
-              <div class="progress-bar-fill" [style.width.%]="genre.percentage" [style.background-color]="genre.color"></div>
-            </div>
-          </div>
+        <div class="chart-wrap donut-wrap">
+          <canvas baseChart [data]="genreChartData" [options]="genreChartOptions" type="doughnut">
+          </canvas>
         </div>
       </div>
 
-      <!-- Salles & Capacité -->
-      <div class="dashboard-card salles-card">
+      <!-- Bar : Films par genre -->
+      <div class="dashboard-card">
         <div class="card-header">
-          <h3><i class="bi bi-projector"></i> Liste des Salles</h3>
+          <h3><i class="bi bi-bar-chart"></i> Films par Genre</h3>
+        </div>
+        <div class="chart-wrap bar-wrap">
+          <canvas baseChart [data]="filmsChartData" [options]="filmsChartOptions" type="bar"></canvas> ✅ correcto
+        </div>
+      </div>
+
+      <!-- Salles avec taux d'occupation -->
+      <div class="dashboard-card">
+        <div class="card-header">
+          <h3><i class="bi bi-projector"></i> Occupation des Salles</h3>
         </div>
         <div class="salles-list">
           <div *ngFor="let salle of salles" class="salle-item">
@@ -65,9 +67,33 @@
               <div class="salle-name">Salle N° {{ salle.numero }}</div>
               <div class="salle-movie">Capacité : <span>{{ salle.capacite }} places</span></div>
             </div>
+            <div class="salle-occupation">
+              <div class="occupation-bar-bg">
+                <div class="occupation-bar-fill" [style.width.%]="occupationOf(salle)"></div>
+              </div>
+              <span class="occupation-pct">{{ occupationOf(salle) }}%</span>
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- Résumé billetterie -->
+      <div class="dashboard-card">
+        <div class="card-header">
+          <h3><i class="bi bi-ticket-perforated"></i> Billetterie</h3>
+        </div>
+        <div class="ticket-summary">
+          <div class="ticket-block">
+            <span class="ticket-value">{{ totalReservations }}</span>
+            <span class="ticket-label">Réservations totales</span>
+          </div>
+          <div class="ticket-block">
+            <span class="ticket-value">{{ totalBilletsVendus }}</span>
+            <span class="ticket-label">Billets vendus</span>
+          </div>
+        </div>
+      </div>
+
     </div>
   </ng-container>
 

@@ -25,7 +25,7 @@ import {
   getGenreLabel,
   getImageMedias,
   getMediaFilePath,
-  getNationalityLabel,
+  getNationaliteLabel,
   getPosterUrl,
   getVideoMedias,
   getYearLabel,
@@ -65,7 +65,7 @@ export class FilmDetailsModalComponent {
   readonly getGenreLabel = getGenreLabel;
   readonly getYearLabel = getYearLabel;
   readonly getDirectorLabel = getDirectorLabel;
-  readonly getNationalityLabel = getNationalityLabel;
+  readonly getNationalityLabel = getNationaliteLabel;
   readonly getActorsLabel = getActorsLabel;
 
   readonly images = computed(() => {

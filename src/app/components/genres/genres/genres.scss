@@ -1,0 +1,146 @@
+:host { display: block; }
+
+.page-header { margin-bottom: 28px; }
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: #e50914;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0 0 8px;
+  color: #f8fafc;
+  font-size: clamp(1.7rem, 3vw, 2.2rem);
+}
+
+.lede { margin: 0; color: #94a3b8; }
+
+.state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+  border: 1px dashed #334155;
+  border-radius: 16px;
+  color: #94a3b8;
+}
+
+.genre-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.genre-tile {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border: 1px solid #334155;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  padding: 0;
+  background: #1e293b;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: #e50914;
+
+    img { transform: scale(1.06); }
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(2,6,23,0.1) 0%, rgba(2,6,23,0.85) 100%);
+}
+
+.tile-content {
+  position: absolute;
+  left: 16px;
+  bottom: 14px;
+  right: 16px;
+  text-align: left;
+
+  h3 {
+    margin: 0 0 2px;
+    color: #f8fafc;
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+
+  .count {
+    color: #ffd700;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+}
+
+.genre-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  margin-top: 20px;
+}
+
+.genre-tile {
+  position: relative;
+  height: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  background: #1e293b;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+
+    img {
+      transform: scale(1.08);
+    }
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; // 👈 Clave para que la foto no se deforme
+    transition: transform 0.5s ease;
+  }
+
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.2)); // 👈 Oscurece abajo para leer el texto
+  }
+
+  .tile-content {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    text-align: left;
+
+    h3 {
+      color: #ffffff;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+    }
+  }
+}

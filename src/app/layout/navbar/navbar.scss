@@ -13,11 +13,12 @@ $text-muted: #94a3b8;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
+  padding: 0 20px;
   color: $text-main;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
   position: relative;
   z-index: 100;
+  gap: 15px;
 }
 
 // Boutons d'icônes réutilisables
@@ -44,23 +45,22 @@ $text-muted: #94a3b8;
 .navbar-left {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
+  flex-shrink: 0;
 
   .brand {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     font-weight: 700;
-    letter-spacing: -0.5px;
 
     .brand-icon {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
     }
 
     .brand-title {
       color: $text-main;
-
       .highlight {
         color: $primary-red;
       }
@@ -69,9 +69,9 @@ $text-muted: #94a3b8;
 }
 
 // Section Centre - Recherche Unifiée
-.navbar-center {
-  flex: 1;
-  max-width: 580px;
+.navbar-center-search {
+  flex: 1.5;
+  max-width: 480px;
 
   .search-group {
     display: flex;
@@ -79,7 +79,7 @@ $text-muted: #94a3b8;
     background-color: $bg-search;
     border: 1px solid $border-color;
     border-radius: 20px;
-    padding: 2px 8px;
+    padding: 2px 6px;
     transition: border-color 0.2s, box-shadow 0.2s;
 
     &:focus-within {
@@ -87,17 +87,16 @@ $text-muted: #94a3b8;
       box-shadow: 0 0 0 3px rgba($primary-red, 0.25);
     }
 
-    // Style du Select Genre
     .genre-select {
       background: transparent;
       border: none;
       border-right: 1px solid $border-color;
       color: $text-muted;
-      font-size: 0.85rem;
-      padding: 6px 10px;
+      font-size: 0.8rem;
+      padding: 6px 8px;
       outline: none;
       cursor: pointer;
-      transition: color 0.2s;
+      max-width: 140px;
 
       &:hover, &:focus {
         color: $text-main;
@@ -109,7 +108,6 @@ $text-muted: #94a3b8;
       }
     }
 
-    // Champ de recherche
     .search-box {
       flex: 1;
       position: relative;
@@ -118,18 +116,18 @@ $text-muted: #94a3b8;
 
       .search-icon {
         position: absolute;
-        left: 12px;
+        left: 10px;
         color: $text-muted;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
       }
 
       input {
         width: 100%;
         background: transparent;
         border: none;
-        padding: 8px 16px 8px 36px;
+        padding: 6px 12px 6px 32px;
         color: $text-main;
-        font-size: 0.875rem;
+        font-size: 0.85rem;
         outline: none;
 
         &::placeholder {
@@ -140,51 +138,54 @@ $text-muted: #94a3b8;
   }
 }
 
-// Banner d'accueil et statut
-.welcome-banner {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  padding: 6px 14px;
-  border: 1px solid $border-color;
-  border-radius: 20px;
-  background-color: $bg-search;
-}
-
-.welcome-text {
-  margin: 0;
+// Section Centre - Accueil & Statut
+.navbar-center-welcome {
   flex: 1;
-  min-width: 0;
-  color: $text-muted;
-  font-size: 0.875rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  max-width: 280px;
 
-  strong {
-    color: $text-main;
-    font-weight: 600;
+  .welcome-banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 5px 12px;
+    border: 1px solid $border-color;
+    border-radius: 20px;
+    background-color: $bg-search;
   }
-}
 
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: rgba($primary-red, 0.12);
-  color: #ffd700;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  .welcome-text {
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+    color: $text-muted;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
-  .status-dot {
-    font-size: 0.45rem;
-    color: #22c55e;
+    strong {
+      color: $text-main;
+    }
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: rgba($primary-red, 0.12);
+    color: #ffd700;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+
+    .status-dot {
+      font-size: 0.4rem;
+      color: #22c55e;
+    }
   }
 }
 
@@ -192,7 +193,8 @@ $text-muted: #94a3b8;
 .navbar-right {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
+  flex-shrink: 0;
 
   .notif-btn {
     position: relative;
@@ -203,11 +205,10 @@ $text-muted: #94a3b8;
       right: 4px;
       background-color: $primary-red;
       color: white;
-      font-size: 0.65rem;
+      font-size: 0.6rem;
       font-weight: bold;
-      padding: 2px 5px;
+      padding: 2px 4px;
       border-radius: 10px;
-      line-height: 1;
     }
   }
 
@@ -215,8 +216,8 @@ $text-muted: #94a3b8;
     position: relative;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 4px 8px;
+    gap: 8px;
+    padding: 4px 6px;
     border-radius: 8px;
     cursor: pointer;
     user-select: none;
@@ -227,8 +228,8 @@ $text-muted: #94a3b8;
     }
 
     .avatar {
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       background: linear-gradient(135deg, $primary-red, #9f1239);
       display: flex;
@@ -236,7 +237,7 @@ $text-muted: #94a3b8;
       justify-content: center;
       font-weight: bold;
       color: white;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
 
     .user-info {
@@ -244,28 +245,27 @@ $text-muted: #94a3b8;
       flex-direction: column;
 
       .user-name {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         font-weight: 600;
         color: $text-main;
       }
 
       .user-role {
-        font-size: 0.725rem;
+        font-size: 0.7rem;
         color: $text-muted;
       }
     }
 
     .dropdown-icon {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: $text-muted;
     }
 
-    // Dropdown Menu
     .dropdown-menu {
       position: absolute;
       top: calc(100% + 8px);
       right: 0;
-      width: 200px;
+      width: 180px;
       background-color: $bg-navbar;
       border: 1px solid $border-color;
       border-radius: 8px;
@@ -279,19 +279,18 @@ $text-muted: #94a3b8;
       }
 
       .dropdown-item {
-        padding: 10px 16px;
+        padding: 8px 14px;
         color: $text-main;
         text-decoration: none;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
         background: transparent;
         border: none;
         width: 100%;
         text-align: left;
         cursor: pointer;
-        transition: background-color 0.2s;
 
         &:hover {
           background-color: $bg-search;
@@ -300,7 +299,6 @@ $text-muted: #94a3b8;
 
         &.logout {
           color: #f87171;
-
           &:hover {
             background-color: rgba(#ef4444, 0.1);
           }
@@ -316,14 +314,9 @@ $text-muted: #94a3b8;
   }
 }
 
-// Media Queries
-@media (max-width: 768px) {
-  .welcome-banner {
-    padding: 6px 10px;
-    gap: 8px;
-  }
-
-  .status-badge {
-    display: none;
+// Media Queries pour écrans moyens
+@media (max-width: 1024px) {
+  .navbar-center-welcome {
+    display: none; // Oculta el banner de bienvenida en pantallas medianas/pequeñas para ganar espacio
   }
 }

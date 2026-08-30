@@ -1,35 +1,30 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { GenreService } from '../../services/genre';
+import { Genre } from '../../models/genre';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.scss']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
 
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private genreService = inject(GenreService);
 
   searchQuery: string = '';
-  selectedGenreId: number | string = ''; // Stocke l'ID du genre sélectionné
+  selectedGenreId: number | string = '';
   unreadNotifications: number = 3;
   isProfileMenuOpen: boolean = false;
 
-  // Données statiques pour les genres (similaires aux entités Genre de votre DB)
-  genres = [
-    { id: 1, nom: 'Action' },
-    { id: 2, nom: 'Comédie' },
-    { id: 3, nom: 'Drame' },
-    { id: 4, nom: 'Horreur' },
-    { id: 5, nom: 'Science-Fiction' },
-    { id: 6, nom: 'Aventure' },
-    { id: 7, nom: 'Animation' }
-  ];
+  genres: Genre[] = [];
 
   currentUser = {
     name: 'Mohamed Chaabi',
@@ -37,12 +32,61 @@ export class NavbarComponent {
     avatar: ''
   };
 
+  ngOnInit(): void {
+    this.loadGenres();
+    this.syncWithQueryParams();
+  }
+
+  loadGenres(): void {
+    this.genreService.getAllGenres().subscribe({
+      next: (data) => {
+        this.genres = data;
+      },
+      error: (err) => {
+        console.error('Erreur chargement genres navbar', err);
+      }
+    });
+  }
+
+  /**
+   * Synchronise la barre de recherche et le sélecteur de genre
+   * avec les Query Parameters présents dans l'URL
+   */
+  syncWithQueryParams(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params['search'] !== undefined) {
+        this.searchQuery = params['search'];
+      }
+      if (params['genreId'] !== undefined) {
+        this.selectedGenreId = params['genreId'];
+      }
+    });
+  }
+
+  /**
+   * Méthode unique pour exécuter la recherche combinée
+   */
+  triggerSearch(): void {
+    const queryParams: Record<string, string | number> = {};
+
+    if (this.searchQuery && this.searchQuery.trim() !== '') {
+      queryParams['search'] = this.searchQuery.trim();
+    }
+
+    if (this.selectedGenreId) {
+      queryParams['genreId'] = this.selectedGenreId;
+    }
+
+    this.router.navigate(['/films/a-laffiche'], { queryParams });
+  }
+
   onSearch(): void {
-    console.log('Recherche :', this.searchQuery, '| Genre ID :', this.selectedGenreId);
+    this.triggerSearch();
   }
 
   onGenreChange(): void {
-    console.log('Filtre genre changé :', this.selectedGenreId);}
+    this.triggerSearch();
+  }
 
   get firstName(): string {
     return this.currentUser.name.split(' ')[0] ?? this.currentUser.name;
@@ -56,7 +100,6 @@ export class NavbarComponent {
     this.isProfileMenuOpen = !this.isProfileMenuOpen;
   }
 
-  // 3. Rediriger vers la page /login lors du logout
   logout(): void {
     this.isProfileMenuOpen = false;
     this.router.navigate(['/login']);

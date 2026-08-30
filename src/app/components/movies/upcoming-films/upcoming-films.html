@@ -1,0 +1,36 @@
+<section class="upcoming">
+    <header class="page-header">
+        <p class="eyebrow">Catalogue</p>
+        <h1>Prochainement</h1>
+        <p class="lede">Les films qui arrivent bientôt dans nos salles.</p>
+    </header>
+
+    @if (isLoading()) {
+    <div class="state">Chargement…</div>
+    } @else if (upcomingFilms().length === 0) {
+    <div class="state">Aucune sortie prévue pour le moment.</div>
+    } @else {
+    <div class="upcoming-grid">
+        @for (film of upcomingFilms(); track film.id) {
+        <article class="upcoming-card">
+            <div class="poster-wrap">
+                <img [src]="film.photoUrl" [alt]="film.titre" />
+                <span class="countdown-badge">
+                    Dans {{ daysUntilRelease(film.dateSortie!) }} jour{{ daysUntilRelease(film.dateSortie!) > 1 ? 's' :
+                    '' }}
+                </span>
+            </div>
+            <div class="info">
+                <h3>{{ film.titre }}</h3>
+                <p class="release-date">Sortie le {{ film.dateSortie | date: 'dd MMMM yyyy' }}</p>
+                <p class="synopsis">{{ film.description }}</p>
+                <button type="button" class="btn-notify" [class.notified]="isNotified(film.id!)"
+                    [disabled]="isNotified(film.id!)" (click)="notifyMe(film.id!)">
+                    {{ isNotified(film.id!) ? '✓ Vous serez prévenu' : '🔔 Me prévenir' }}
+                </button>
+            </div>
+        </article>
+        }
+    </div>
+    }
+</section>
