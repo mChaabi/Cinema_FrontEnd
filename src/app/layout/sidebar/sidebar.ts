@@ -65,7 +65,7 @@ export class SidebarComponent {
     groups.push({
       title: 'MES BILLETS',
       items: [
-        { label: 'Réserver un billet', icon: 'bi-ticket-perforated', route: '/films/a-laffiche' }, // 👈 Apunta al catálogo
+        { label: 'Réserver un billet', icon: 'bi-ticket-perforated', route: '/reservations/nouvelle/1' } // 👈 Forzamos el ID 1 o el que tengas en tu BD
         { label: 'Mes réservations', icon: 'bi-journal-check', route: '/reservations/historique' }
       ]
     });
