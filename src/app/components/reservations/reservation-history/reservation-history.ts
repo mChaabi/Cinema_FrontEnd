@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+// reservation-history.ts
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReservationResponseDto } from '../../../models/reservation';
 import { ReservationService } from '../services/reservation';
+import { AuthService } from '../../../services/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-reservation-history',
@@ -11,26 +14,27 @@ import { ReservationService } from '../services/reservation';
   styleUrls: ['./reservation-history.scss']
 })
 export class ReservationHistoryComponent implements OnInit {
-  reservations: ReservationResponseDto[] = [];
-  isLoading: boolean = true;
-  errorMessage: string = '';
-  
-  // ID de ejemplo del usuario actual (puedes cambiarlo por el de tu sesión activa)
-  currentUserId: number = 1; 
+  private reservationService = inject(ReservationService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
-  constructor(private reservationService: ReservationService) {}
+  reservations: ReservationResponseDto[] = [];
+  isLoading = true;
+  errorMessage = '';
 
   ngOnInit(): void {
-    this.loadUserReservations();
+    const userId = this.authService.currentUser()?.id;
+    if (!userId) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.loadUserReservations(userId);
   }
 
-  loadUserReservations(): void {
+  loadUserReservations(userId: number): void {
     this.isLoading = true;
-    this.reservationService.getMyReservations(this.currentUserId).subscribe({
-      next: (data) => {
-        this.reservations = data;
-        this.isLoading = false;
-      },
+    this.reservationService.getMyReservations(userId).subscribe({
+      next: (data) => { this.reservations = data; this.isLoading = false; },
       error: (err) => {
         console.error('Error al cargar el historial:', err);
         this.errorMessage = 'No se pudieron cargar tus reservas.';
@@ -39,19 +43,11 @@ export class ReservationHistoryComponent implements OnInit {
     });
   }
 
-  // Opcional: Cancelar una reserva desde el historial
   cancelReservation(id: number): void {
-    if (confirm('¿Estás seguro de que deseas cancelar esta reserva?')) {
-      this.reservationService.cancelReservation(id).subscribe({
-        next: () => {
-          // Filtramos la lista localmente para quitar la cancelada
-          this.reservations = this.reservations.filter(r => r.id !== id);
-        },
-        error: (err) => {
-          console.error('Error al cancelar:', err);
-          alert('No se pudo cancelar la reserva.');
-        }
-      });
-    }
+    if (!confirm('¿Estás seguro de que deseas cancelar esta reserva?')) return;
+    this.reservationService.cancelReservation(id).subscribe({
+      next: () => this.reservations = this.reservations.filter(r => r.id !== id),
+      error: (err) => { console.error('Error al cancelar:', err); alert('No se pudo cancelar la reserva.'); }
+    });
   }
 }

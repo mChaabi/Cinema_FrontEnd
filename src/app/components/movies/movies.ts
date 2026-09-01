@@ -17,7 +17,9 @@ import { FilmDetailsModalComponent } from './film-details-modal/film-details-mod
 import { FilmReviewsComponent } from './reviews/film-reviews.component';
 import { getFallbackFilms } from './utils/film.fallback';
 import { filmKey, getGenreLabel, matchesFilmQuery, mergeFilms, normalizeFilm } from './utils/film.utils';
-import { ActivatedRoute } from '@angular/router';
+import { ReservationStateService } from '../reservations/services/reservation-state';
+import { ActivatedRoute, Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-movies',
@@ -31,6 +33,8 @@ export class MoviesComponent {
   private readonly filmService = inject(FilmService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly route = inject(ActivatedRoute);
+  private reservationState = inject(ReservationStateService);
+  private router = inject(Router);
 
   readonly films = signal<Film[]>([]);
   readonly isLoading = signal(true);
@@ -85,9 +89,16 @@ export class MoviesComponent {
   constructor() {
     afterNextRender(() => this.loadFilms());
 
+    // Écoute des paramètres de l'URL pour la recherche et les filtres
     this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
-      if (params['genre']) {
+      if (params['search'] !== undefined) {
+        this.searchQuery.set(params['search']);
+      }
+      if (params['genre'] !== undefined) {
         this.selectedGenre.set(params['genre']);
+      }
+      if (params['genreId'] !== undefined) {
+        this.selectedGenre.set(params['genreId']);
       }
     });
   }
@@ -117,6 +128,11 @@ export class MoviesComponent {
   onGenreChange(event: Event): void {
     this.selectedGenre.set((event.target as HTMLSelectElement).value);
   }
+
+  irAReservar(seance: any, filmTitle: string) {
+  this.reservationState.setSeance(seance.id!, filmTitle);
+  this.router.navigate(['/reservations/nouvelle', seance.id]);
+}
 
   onYearChange(event: Event): void {
     this.selectedYear.set((event.target as HTMLSelectElement).value);

@@ -14,27 +14,19 @@
   <div class="navbar-center-search">
     <div class="search-group">
       <!-- Select des genres dynamiques -->
-      <select 
-        [(ngModel)]="selectedGenreId" 
-        (change)="onGenreChange()" 
-        class="genre-select"
-      >
+      <select [(ngModel)]="selectedGenreId" (change)="onGenreChange()" class="genre-select">
         <option value="">Tous les genres</option>
         <option *ngFor="let g of genres" [value]="g.id">
           {{ g.libelle }}
         </option>
       </select>
 
-      
+
       <!-- Champ de recherche -->
       <div class="search-box">
         <i class="bi bi-search search-icon" (click)="onSearch()" style="cursor: pointer;"></i>
-        <input 
-          type="text" 
-          [(ngModel)]="searchQuery" 
-          (keyup.enter)="onSearch()"
-          placeholder="Rechercher un film, une séance..." 
-        />
+        <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()"
+          placeholder="Rechercher un film, une séance..." />
       </div>
     </div>
   </div>
@@ -61,11 +53,11 @@
 
     <div class="user-dropdown" (click)="toggleProfileMenu()">
       <div class="avatar">
-        <span>{{ currentUser.name.charAt(0) }}</span>
+        <span>{{ displayName().charAt(0).toUpperCase() }}</span>
       </div>
       <div class="user-info">
-        <span class="user-name">{{ currentUser.name }}</span>
-        <span class="user-role">{{ currentUser.role }}</span>
+        <span class="user-name">{{ displayName() }}</span>
+        <span class="user-role">{{ displayRole() }}</span>
       </div>
       <i class="bi bi-chevron-down dropdown-icon"></i>
 

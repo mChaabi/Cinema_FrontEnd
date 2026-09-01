@@ -1,21 +1,22 @@
+<!-- reservation-summary.html corregido -->
 <div class="summary-container">
   <h2>Resumen de tu Reserva</h2>
 
-  <div class="summary-card" *ngIf="selectedSieges.length > 0; else noSeats">
+  <div class="summary-card" *ngIf="state.selectedSieges().length > 0; else noSeats">
     <div class="info-group">
       <span class="label">Película:</span>
-      <span class="value">{{ movieTitle }}</span>
+      <span class="value">{{ state.movieTitle() }}</span>
     </div>
 
     <div class="info-group">
       <span class="label">ID de Sesión:</span>
-      <span class="value">#{{ seanceId }}</span>
+      <span class="value">#{{ state.seanceId() }}</span>
     </div>
 
     <div class="info-group">
       <span class="label">Asientos seleccionados:</span>
       <div class="seats-badges">
-        <span class="badge" *ngFor="let s of selectedSieges">{{ s.numero }}</span>
+        <span class="badge" *ngFor="let s of state.selectedSieges()">{{ s.numero }}</span>
       </div>
     </div>
 
@@ -23,13 +24,10 @@
 
     <div class="info-group total">
       <span class="label">Total a Pagar:</span>
-      <span class="value price">{{ totalAmount }} DH</span>
+      <span class="value price">{{ state.totalAmount() }} DH</span>
     </div>
 
-    <button 
-      class="btn-confirm" 
-      [disabled]="isSubmitting"
-      (click)="confirmReservation()">
+    <button class="btn-confirm" [disabled]="isSubmitting" (click)="confirmReservation()">
       {{ isSubmitting ? 'Procesando...' : 'Confirmar y Pagar' }}
     </button>
   </div>

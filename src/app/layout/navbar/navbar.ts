@@ -1,9 +1,10 @@
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { GenreService } from '../../services/genre';
 import { Genre } from '../../models/genre';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-navbar',
@@ -16,8 +17,8 @@ export class NavbarComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
 
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
   private genreService = inject(GenreService);
+  private authService = inject(AuthService);
 
   searchQuery: string = '';
   selectedGenreId: number | string = '';
@@ -26,70 +27,38 @@ export class NavbarComponent implements OnInit {
 
   genres: Genre[] = [];
 
-  currentUser = {
-    name: 'Mohamed Chaabi',
-    role: 'Administrateur',
-    avatar: ''
-  };
+  readonly currentUser = computed(() => this.authService.currentUser());
+
+  readonly displayName = computed(() => this.currentUser()?.username ?? 'Invité');
+  readonly displayRole = computed(() => {
+    const role = this.currentUser()?.role;
+    return role === 'ADMIN' ? 'Administrateur' : role === 'USER' ? 'Utilisateur' : '';
+  });
 
   ngOnInit(): void {
     this.loadGenres();
-    this.syncWithQueryParams();
   }
 
   loadGenres(): void {
     this.genreService.getAllGenres().subscribe({
-      next: (data) => {
-        this.genres = data;
-      },
-      error: (err) => {
-        console.error('Erreur chargement genres navbar', err);
-      }
+      next: (data) => { this.genres = data; },
+      error: (err) => console.error('Erreur chargement genres navbar', err)
     });
-  }
-
-  /**
-   * Synchronise la barre de recherche et le sélecteur de genre
-   * avec les Query Parameters présents dans l'URL
-   */
-  syncWithQueryParams(): void {
-    this.route.queryParams.subscribe(params => {
-      if (params['search'] !== undefined) {
-        this.searchQuery = params['search'];
-      }
-      if (params['genreId'] !== undefined) {
-        this.selectedGenreId = params['genreId'];
-      }
-    });
-  }
-
-  /**
-   * Méthode unique pour exécuter la recherche combinée
-   */
-  triggerSearch(): void {
-    const queryParams: Record<string, string | number> = {};
-
-    if (this.searchQuery && this.searchQuery.trim() !== '') {
-      queryParams['search'] = this.searchQuery.trim();
-    }
-
-    if (this.selectedGenreId) {
-      queryParams['genreId'] = this.selectedGenreId;
-    }
-
-    this.router.navigate(['/films/a-laffiche'], { queryParams });
   }
 
   onSearch(): void {
-    this.triggerSearch();
+    const queryParams: Record<string, string | number> = {};
+    if (this.searchQuery?.trim()) queryParams['search'] = this.searchQuery.trim();
+    if (this.selectedGenreId) queryParams['genreId'] = this.selectedGenreId;
+    this.router.navigate(['/films/a-laffiche'], { queryParams });
   }
 
   onGenreChange(): void {
-    this.triggerSearch();
+    this.onSearch();
   }
 
   get firstName(): string {
-    return this.currentUser.name.split(' ')[0] ?? this.currentUser.name;
+    return this.displayName().split(' ')[0] ?? this.displayName();
   }
 
   onToggleSidebar(): void {
@@ -102,6 +71,6 @@ export class NavbarComponent implements OnInit {
 
   logout(): void {
     this.isProfileMenuOpen = false;
-    this.router.navigate(['/login']);
+    this.authService.logout();
   }
 }

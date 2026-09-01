@@ -1,6 +1,6 @@
 <div class="seat-selector-container">
   <h3>Selecciona tus asientos</h3>
-  
+
   <!-- Leyenda -->
   <div class="legend">
     <span class="badge available">Disponible</span>
@@ -13,24 +13,23 @@
 
   <!-- Grid de Asientos -->
   <div class="seats-grid">
-    <button 
-      type="button"
-      *ngFor="let siege of sieges"
-      class="seat-btn"
-      [ngClass]="{
+    <button type="button" *ngFor="let siege of sieges" class="seat-btn" [ngClass]="{
         'reserved': siege.isReserved,
         'selected': isSelected(siege),
         'available': !siege.isReserved && !isSelected(siege)
-      }"
-      [disabled]="siege.isReserved"
-      (click)="toggleSeat(siege)">
+      }" [disabled]="siege.isReserved" (click)="toggleSeat(siege)">
       {{ siege.numero }}
     </button>
   </div>
 
   <!-- Resumen de selección -->
-  <div class="selection-summary" *ngIf="selectedSieges.length > 0">
-    <p>Asientos seleccionados: <strong>{{ selectedSieges.length }}</strong></p>
-    <p>Total a pagar: <strong>{{ totalAmount }} DH</strong></p>
+  <div class="selection-summary" *ngIf="state.selectedSieges().length > 0">
+    <p>Asientos seleccionados: <strong>{{ state.selectedSieges().length }}</strong></p>
+    <p>Total a pagar: <strong>{{ state.totalAmount() }} DH</strong></p>
   </div>
+
+  <!-- añade este botón al final de seat-selector.html -->
+  <button class="btn-confirm" [disabled]="state.selectedSieges().length === 0" (click)="goToSummary()">
+    Continuer vers le résumé
+  </button>
 </div>

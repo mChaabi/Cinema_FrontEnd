@@ -1,7 +1,13 @@
-export interface Paiement {
-  id?: number;
+// src/app/models/paiement.ts
+export interface PaiementRequestDto {
   reservationId: number;
   amount: number;
   status: string;
-  paymentDate?: string;
+}
+
+export interface PaiementResponseDto {
+  id: number;
+  reservationId: number;
+  amount: number;
+  status: string;
 }

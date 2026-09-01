@@ -1,19 +1,22 @@
 <aside class="sidebar-container" [class.collapsed]="isCollapsed">
   <div class="sidebar-content">
-    <div *ngFor="let group of menuGroups" class="menu-group">
+    <div *ngFor="let group of menuGroups(); trackBy: trackByTitle" class="menu-group">
       <span *ngIf="!isCollapsed" class="group-title">{{ group.title }}</span>
 
       <ul class="menu-list">
-        <li *ngFor="let item of group.items">
-          <a 
-            [routerLink]="item.route" 
-            routerLinkActive="active" 
+        <li *ngFor="let item of group.items; trackBy: trackByRoute">
+          
+          <!-- ✅ Correction ici : Ajout de l'ouverture de la balise <a> -->
+          <a
+            [routerLink]="item.route"
+            routerLinkActive="active"
             class="menu-item"
-            [title]="isCollapsed ? item.label : ''"
-          >
+            [title]="isCollapsed ? item.label : ''">
+            
             <i class="bi" [ngClass]="item.icon"></i>
             <span *ngIf="!isCollapsed" class="item-label">{{ item.label }}</span>
           </a>
+
         </li>
       </ul>
     </div>

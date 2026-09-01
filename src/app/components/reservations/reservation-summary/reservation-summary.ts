@@ -1,9 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { Siege } from '../../../models/siege';
 import { ReservationRequestDto } from '../../../models/reservation';
 import { ReservationService } from '../services/reservation';
+import { ReservationStateService } from '../services/reservation-state';
+import { AuthService } from '../../../services/auth';
+import { PaiementService } from '../../../services/paiement';
+import { PaiementRequestDto } from '../../../models/paiement';
 
 @Component({
   selector: 'app-reservation-summary',
@@ -12,49 +15,56 @@ import { ReservationService } from '../services/reservation';
   templateUrl: './reservation-summary.html',
   styleUrls: ['./reservation-summary.scss']
 })
-export class ReservationSummaryComponent implements OnInit {
-  // Datos que puedes recibir por @Input o compartir mediante un servicio de estado
-  @Input() seanceId!: number;
-  @Input() movieTitle: string = 'Película de Ejemplo';
-  @Input() selectedSieges: Siege[] = [];
-  @Input() customerId: number = 1; // ID del usuario logueado actualmente
+export class ReservationSummaryComponent {
+  state = inject(ReservationStateService); // público para el template
+  private reservationService = inject(ReservationService);
+  private paiementService = inject(PaiementService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
-  seatPrice: number = 50; // Precio fijo por asiento (ajustable)
-  isSubmitting: boolean = false;
+  isSubmitting = false;
 
-  constructor(
-    private reservationService: ReservationService,
-    private router: Router
-  ) {}
-
-  ngOnInit(): void {}
-
-  // Calcular el total a pagar
-  get totalAmount(): number {
-    return this.selectedSieges.length * this.seatPrice;
-  }
-
-  // Confirmar la reserva y enviarla al Backend (POST /api/reservations)
   confirmReservation(): void {
-    if (this.selectedSieges.length === 0) return;
+    const sieges = this.state.selectedSieges();
+    const seanceId = this.state.seanceId();
+    const customerId = this.authService.currentUser()?.id;
 
-    const siegeIds = this.selectedSieges.map(s => s.id!).filter(id => id !== undefined);
+    if (sieges.length === 0 || !seanceId || !customerId) {
+      alert('Session invalide. Merci de recommencer votre réservation.');
+      this.router.navigate(['/films/a-laffiche']);
+      return;
+    }
 
     const requestDto: ReservationRequestDto = {
-      seanceId: this.seanceId,
-      customerId: this.customerId,
-      nbrPlaces: this.selectedSieges.length,
-      siegeIds: siegeIds
+      seanceId,
+      customerId,
+      nbrPlaces: sieges.length,
+      siegeIds: sieges.map(s => s.id!).filter(id => id !== undefined)
     };
 
     this.isSubmitting = true;
 
     this.reservationService.createReservation(requestDto).subscribe({
-      next: (response) => {
-        console.log('Reserva creada con éxito:', response);
-        this.isSubmitting = false;
-        // Redirigir a la vista de "Mis reservas" o mostrar un mensaje de éxito
-        this.router.navigate(['/reservations/historique']);
+      next: (reservation) => {
+        // ✅ 2. Una vez creada la reserva, se registra el pago
+        const paiementDto: PaiementRequestDto = {
+          reservationId: reservation.id,
+          amount: this.state.totalAmount(),
+          status: 'PAYE'
+        };
+
+        this.paiementService.createPaiement(paiementDto).subscribe({
+          next: () => {
+            this.isSubmitting = false;
+            this.state.reset();
+            this.router.navigate(['/reservations/historique']);
+          },
+          error: (err) => {
+            console.error('Erreur de paiement:', err);
+            this.isSubmitting = false;
+            alert('La réservation a été créée mais le paiement a échoué.');
+          }
+        });
       },
       error: (err) => {
         console.error('Error al procesar la reserva:', err);

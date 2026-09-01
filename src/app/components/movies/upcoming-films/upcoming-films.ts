@@ -21,8 +21,8 @@ export class UpcomingFilmsComponent {
   readonly upcomingFilms = computed(() => {
     const today = new Date();
     return this.allFilms()
-      .filter((film) => film.dateSortie && new Date(film.dateSortie) > today)
-      .sort((a, b) => new Date(a.dateSortie!).getTime() - new Date(b.dateSortie!).getTime());
+      // .filter((film) => film.dateSortie && new Date(film.dateSortie) > today)
+      // .sort((a, b) => new Date(a.dateSortie!).getTime() - new Date(b.dateSortie!).getTime());
   });
 
   constructor() {
