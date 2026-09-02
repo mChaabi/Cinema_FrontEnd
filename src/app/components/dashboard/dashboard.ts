@@ -91,7 +91,11 @@ export class DashboardComponent implements OnInit {
       )
     }).subscribe({
       next: (res) => {
-        console.log('Responses received:', res);
+        console.log('📦 RESPUESTA COMPLETA DEL BACKEND:', res);
+
+        let filmsCount = 0;
+        let sallesCount = 0;
+        let seancesCount = 0;
 
         if (res.dashboard) {
           this.films = res.dashboard.films || [];
@@ -101,20 +105,26 @@ export class DashboardComponent implements OnInit {
           this.totalBilletsVendus = res.dashboard.totalBilletsVendus || 0;
           this.occupationParSalle = res.dashboard.occupationParSalle || {};
 
-          this.stats[0].value = this.films.length.toString();
-          this.stats[1].value = this.salles.length.toString();
-          this.stats[2].value = this.seances.length.toString();
-          this.stats[3].value = this.totalReservations.toString();
-          this.stats[4].value = this.totalBilletsVendus.toString();
+          filmsCount = this.films.length;
+          sallesCount = this.salles.length;
+          seancesCount = this.seances.length;
         }
 
         this.allGenres = res.genres || [];
+
+        // 💡 Actualizamos dinámicamente las tarjetas de estadísticas con datos reales
+        this.stats = [
+          { title: 'Films actifs', value: filmsCount.toString(), change: 'En salle', positive: true, icon: 'bi-film' },
+          { title: 'Salles disponibles', value: sallesCount.toString(), change: 'Total', positive: true, icon: 'bi-projector' },
+          { title: 'Séances programmées', value: seancesCount.toString(), change: "Aujourd'hui", positive: true, icon: 'bi-calendar-event' },
+          { title: 'Réservations', value: this.totalReservations.toString(), change: 'Total', positive: true, icon: 'bi-journal-check' },
+          { title: 'Billets vendus', value: this.totalBilletsVendus.toString(), change: 'Total', positive: true, icon: 'bi-ticket-perforated' }
+        ];
 
         this.buildCharts();
 
         this.isLoading = false;
         this.cdr.detectChanges();
-        console.log('Dashboard loading complete, isLoading set to false');
       },
       error: (err) => {
         console.error('Critical error in forkJoin:', err);
@@ -122,48 +132,78 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
+  private buildCharts(): void {
+    const colors = ['#e11d48', '#3b82f6', '#eab308', '#10b981', '#8b5cf6', '#f97316', '#06b6d4', '#84cc16'];
 
-private buildCharts(): void {
-  const colors = ['#e11d48', '#3b82f6', '#eab308', '#10b981', '#8b5cf6', '#f97316'];
-  const genreMap = new Map<string, number>();
+    // Creamos un mapa para contar cuántas películas hay por cada ID de género
+    const genreCountMap = new Map<number, number>();
 
-  if (this.allGenres && Array.isArray(this.allGenres)) {
-    this.allGenres.forEach((g) => genreMap.set(g.libelle, 0));
+    // Inicializar todos los IDs de géneros conocidos a 0
+    if (this.allGenres && Array.isArray(this.allGenres)) {
+      this.allGenres.forEach((g: any) => {
+        genreCountMap.set(g.id, 0);
+      });
+    }
+
+    // Contar las películas reales recorriendo this.films
+    if (this.films && Array.isArray(this.films)) {
+      this.films.forEach((film: any) => {
+        // Intentamos extraer el ID del género de cualquier forma posible en la que venga el objeto
+        let genreId: number | null = null;
+
+        if (film.genre) {
+          if (typeof film.genre === 'number') {
+            genreId = film.genre;
+          } else if (typeof film.genre === 'object' && film.genre.id) {
+            genreId = film.genre.id;
+          }
+        } else if (film.genreId) {
+          genreId = film.genreId;
+        } else if (film.idGenre) {
+          genreId = film.idGenre;
+        }
+
+        // Si encontramos un ID válido, sumamos al contador de ese género
+        if (genreId !== null && genreCountMap.has(genreId)) {
+          genreCountMap.set(genreId, (genreCountMap.get(genreId) || 0) + 1);
+        }
+      });
+    }
+
+    // Construir las etiquetas (labels) y los datos (data) usando los nombres reales de los géneros
+    const labels: string[] = [];
+    const dataCounts: number[] = [];
+
+    if (this.allGenres && Array.isArray(this.allGenres)) {
+      this.allGenres.forEach((g: any) => {
+        labels.push(g.libelle);
+        dataCounts.push(genreCountMap.get(g.id) || 0);
+      });
+    }
+
+    this.genreChartData = {
+      labels: labels,
+      datasets: [
+        {
+          data: dataCounts,
+          backgroundColor: labels.map((_, i) => colors[i % colors.length]),
+          borderWidth: 0
+        }
+      ]
+    };
+
+    this.filmsChartData = {
+      labels: labels,
+      datasets: [
+        {
+          data: dataCounts,
+          label: 'Films',
+          backgroundColor: '#e11d48',
+          borderRadius: 6
+        }
+      ]
+    };
   }
-
-  if (this.films && Array.isArray(this.films)) {
-    this.films.forEach((film) => {
-      const name = film?.genre?.libelle || 'Autre';
-      genreMap.set(name, (genreMap.get(name) || 0) + 1);
-    });
-  }
-
-  const entries = Array.from(genreMap.entries());
-
-  this.genreChartData = {
-    labels: entries.map(([name]) => name),
-    datasets: [
-      {
-        data: entries.map(([, count]) => count),
-        backgroundColor: entries.map((_, i) => colors[i % colors.length]),
-        borderWidth: 0
-      }
-    ]
-  };
-
-  this.filmsChartData = {
-    labels: entries.map(([name]) => name),
-    datasets: [
-      {
-        data: entries.map(([, count]) => count),
-        label: 'Films',
-        backgroundColor: '#e11d48',
-        borderRadius: 6
-      }
-    ]
-  };
-}
-
   occupationOf(salle: Salle): number {
     return this.occupationParSalle[salle.id!] ?? 0;
   }

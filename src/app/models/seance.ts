@@ -7,5 +7,9 @@ export interface Seance {
   heureDebut?: Date;      // Heure de début de la séance (TemporalType.TIME)
   heureFin?: Date;        // Heure de fin de la séance (TemporalType.TIME)
   film?: Film;            // Film projeté lors de cette séance (ManyToOne)
+  filmTitre: string;
+  filmPhotoUrl: string;
   salle?: Salle;          // Salle où a lieu la projection (ManyToOne)
+  salleNumero: number;
+  salleCapacite: number;
 }

@@ -113,9 +113,12 @@ export function getImageMedias(film: Film): Media[] {
 }
 
 export function getVideoMedias(film: Film): Media[] {
-  return (film.medias ?? []).filter(
-    (media) => String(media.typeMedia ?? '').toUpperCase() === TypeMedia.VIDEO
-  );
+  return (film.medias ?? []).filter((media) => {
+    const type = String(media.typeMedia ?? '').toUpperCase();
+    const path = getMediaFilePath(media);
+    // 👈 Solo devuelve el video si es de tipo VIDEO y tiene una ruta válida
+    return type === TypeMedia.VIDEO && Boolean(path);
+  });
 }
 
 export function getDocumentMedias(film: Film): Media[] {

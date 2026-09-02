@@ -6,109 +6,110 @@
   </header>
 
   @if (isLoading()) {
-    <div class="state">Chargement du catalogue…</div>
+  <div class="state">Chargement du catalogue…</div>
   } @else if (errorMessage()) {
-    <div class="state error">
-      <p>{{ errorMessage() }}</p>
-      <button type="button" (click)="loadFilms()">Réessayer</button>
-    </div>
+  <div class="state error">
+    <p>{{ errorMessage() }}</p>
+    <button type="button" (click)="loadFilms()">Réessayer</button>
+  </div>
   } @else if (films().length === 0) {
-    <div class="state">Aucun film n'est disponible pour le moment.</div>
+  <div class="state">Aucun film n'est disponible pour le moment.</div>
   } @else {
-    <app-film-carousel [films]="featuredFilms()" (viewDetails)="onViewDetails($event)" />
+  <app-film-carousel [films]="featuredFilms()" (viewDetails)="onViewDetails($event)" />
 
-    <section class="catalog">
-      <div class="catalog-head">
-        <h2>Tous les films</h2>
-        <p class="result-count">
-          {{ resultCount() }} film{{ resultCount() > 1 ? 's' : '' }}
-          @if (hasActiveFilters()) {
-            <span>· filtres actifs</span>
+  <section class="catalog">
+    <div class="catalog-head">
+      <h2>Tous les films</h2>
+      <p class="result-count">
+        {{ resultCount() }} film{{ resultCount() > 1 ? 's' : '' }}
+        @if (hasActiveFilters()) {
+        <span>· filtres actifs</span>
+        }
+      </p>
+    </div>
+
+    <!-- Barre de recherche + filtre année uniquement -->
+    <div class="filter-toolbar" role="search">
+      <label class="search-field">
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <input type="search" [value]="searchQuery()" (input)="onSearchInput($event)"
+          placeholder="Rechercher par titre ou description…" aria-label="Rechercher un film par titre ou description" />
+      </label>
+
+      <div class="filter-row">
+        <select [value]="selectedYear()" (change)="onYearChange($event)" aria-label="Filtrer par année">
+          <option value="all">Toutes les années</option>
+          @for (year of yearOptions(); track year) {
+          <option [value]="year">{{ year }}</option>
           }
-        </p>
+        </select>
+
+        @if (hasActiveFilters()) {
+        <button type="button" class="btn-clear" (click)="clearFilters()">Effacer</button>
+        }
       </div>
+    </div>
 
-      <!-- Barre de recherche + filtre année uniquement -->
-      <div class="filter-toolbar" role="search">
-        <label class="search-field">
-          <span class="search-icon" aria-hidden="true">⌕</span>
-          <input
-            type="search"
-            [value]="searchQuery()"
-            (input)="onSearchInput($event)"
-            placeholder="Rechercher par titre ou description…"
-            aria-label="Rechercher un film par titre ou description"
-          />
-        </label>
+    <!-- Genre : uniquement les chips -->
+    @if (genreOptions().length) {
+    <div class="genre-chips" role="group" aria-label="Filtrer par genre">
+      <button type="button" class="chip" [class.active]="selectedGenre() === 'all'" (click)="selectGenre('all')">
+        Tous
+      </button>
+      @for (genre of genreOptions(); track genre) {
+      <button type="button" class="chip" [class.active]="selectedGenre() === genre" (click)="selectGenre(genre)">
+        {{ genre }}
+      </button>
+      }
+    </div>
+    }
 
-        <div class="filter-row">
-          <select [value]="selectedYear()" (change)="onYearChange($event)" aria-label="Filtrer par année">
-            <option value="all">Toutes les années</option>
-            @for (year of yearOptions(); track year) {
-              <option [value]="year">{{ year }}</option>
-            }
-          </select>
+    @if (filteredFilms().length === 0) {
+    <div class="state compact">
+      <p>Aucun film ne correspond à votre recherche.</p>
+      @if (hasActiveFilters()) {
+      <button type="button" class="btn-clear" (click)="clearFilters()">Réinitialiser les filtres</button>
+      }
+    </div>
+    } @else {
+    <div class="grid">
+      @for (film of filteredFilms(); track filmKey(film)) {
+      <div class="film-card-wrapper">
+        <!-- 🟢 Tarjeta limpia sin propiedades extrañas -->
+        <app-film-card [film]="film" (viewDetails)="onViewDetails($event)"
+          (viewReviews)="onViewReviews($event)" />
 
-          @if (hasActiveFilters()) {
-            <button type="button" class="btn-clear" (click)="clearFilters()">Effacer</button>
+        <!-- 🟢 Botón de sesiones visible SOLO en la vista de reservas y cambia de color al hacer clic -->
+        @if (isReservationView()) {
+        <button type="button" class="btn-toggle-seances" [class.active]="selectedFilmId() === film.id"
+          (click)="verSeances(film)">
+          {{ selectedFilmId() === film.id ? 'Masquer les séances' : '📅 Voir les séances' }}
+        </button>
+
+        <!-- Lista desplegable de séances -->
+        @if (selectedFilmId() === film.id) {
+        <div class="seances-list">
+          @if (seances().length === 0) {
+          <p class="no-seances">Aucune séance programmée.</p>
+          }
+          @for (seance of seances(); track seance.id) {
+          <div class="seance-item">
+            <span>📅 {{ seance.dateProjection }} — 🕒 {{ seance.heureDebut }}</span>
+            <span>🎬 Salle {{ seance.salleNumero }}</span>
+            <button class="btn-reserve" (click)="reserver(seance, film.titre)">Réserver</button>
+          </div>
           }
         </div>
+        }
+        }
       </div>
-
-      <!-- Genre : uniquement les chips, plus de select redondant -->
-      @if (genreOptions().length) {
-        <div class="genre-chips" role="group" aria-label="Filtrer par genre">
-          <button
-            type="button"
-            class="chip"
-            [class.active]="selectedGenre() === 'all'"
-            (click)="selectGenre('all')"
-          >
-            Tous
-          </button>
-          @for (genre of genreOptions(); track genre) {
-            <button
-              type="button"
-              class="chip"
-              [class.active]="selectedGenre() === genre"
-              (click)="selectGenre(genre)"
-            >
-              {{ genre }}
-            </button>
-          }
-        </div>
       }
-
-      @if (filteredFilms().length === 0) {
-        <div class="state compact">
-          <p>Aucun film ne correspond à votre recherche.</p>
-          @if (hasActiveFilters()) {
-            <button type="button" class="btn-clear" (click)="clearFilters()">Réinitialiser les filtres</button>
-          }
-        </div>
-      } @else {
-        <div class="grid">
-          @for (film of filteredFilms(); track filmKey(film)) {
-            <app-film-card
-              [film]="film"
-              (viewDetails)="onViewDetails($event)"
-              (viewReviews)="onViewReviews($event)"
-            />
-          }
-        </div>
-      }
-    </section>
+    </div>
+    }
+  </section>
   }
 
-  <app-film-details-modal
-    [film]="selectedFilm()"
-    [isOpen]="isModalOpen()"
-    (closed)="onModalClosed()"
-  />
+  <app-film-details-modal [film]="selectedFilm()" [isOpen]="isModalOpen()" (closed)="onModalClosed()" />
 
-  <app-film-reviews
-    [film]="reviewsFilm()"
-    [isOpen]="isReviewsOpen()"
-    (closed)="onReviewsClosed()"
-  />
+  <app-film-reviews [film]="reviewsFilm()" [isOpen]="isReviewsOpen()" (closed)="onReviewsClosed()" />
 </section>

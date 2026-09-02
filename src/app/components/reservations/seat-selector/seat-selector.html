@@ -1,35 +1,51 @@
+<!-- seat-selector.html -->
 <div class="seat-selector-container">
-  <h3>Selecciona tus asientos</h3>
+  <h3>Sélectionnez vos places — {{ state.movieTitle() }}</h3>
 
-  <!-- Leyenda -->
   <div class="legend">
     <span class="badge available">Disponible</span>
-    <span class="badge selected">Seleccionado</span>
-    <span class="badge reserved">Ocupado</span>
+    <span class="badge selected">Sélectionné</span>
+    <span class="badge reserved">Occupé</span>
   </div>
 
-  <!-- Pantalla de cine de referencia -->
-  <div class="screen">PANTALLA</div>
+  <div class="screen">ÉCRAN</div>
 
-  <!-- Grid de Asientos -->
-  <div class="seats-grid">
-    <button type="button" *ngFor="let siege of sieges" class="seat-btn" [ngClass]="{
-        'reserved': siege.isReserved,
-        'selected': isSelected(siege),
-        'available': !siege.isReserved && !isSelected(siege)
-      }" [disabled]="siege.isReserved" (click)="toggleSeat(siege)">
-      {{ siege.numero }}
-    </button>
-  </div>
+  @if (isLoading()) {
+    <p class="no-seats-msg">Chargement des places…</p>
+  } @else if (sieges().length === 0) {
+    <p class="no-seats-msg">
+      Aucun siège configuré pour cette salle. Contactez l'administration.
+    </p>
+  } @else {
+    <div class="seats-grid">
+      @for (siege of sieges(); track siege.id) {
+        <button
+          type="button"
+          class="seat-btn"
+          [ngClass]="{
+            'reserved': siege.isReserved,
+            'selected': isSelected(siege),
+            'available': !siege.isReserved && !isSelected(siege)
+          }"
+          [disabled]="siege.isReserved"
+          (click)="toggleSeat(siege)">
+          {{ siege.numero }}
+        </button>
+      }
+    </div>
+  }
 
-  <!-- Resumen de selección -->
-  <div class="selection-summary" *ngIf="state.selectedSieges().length > 0">
-    <p>Asientos seleccionados: <strong>{{ state.selectedSieges().length }}</strong></p>
-    <p>Total a pagar: <strong>{{ state.totalAmount() }} DH</strong></p>
-  </div>
+  @if (state.selectedSieges().length > 0) {
+    <div class="selection-summary">
+      <p>Places sélectionnées : <strong>{{ state.selectedSieges().length }}</strong></p>
+      <p>Total à payer : <strong>{{ state.totalAmount() }} DH</strong></p>
+    </div>
+  }
 
-  <!-- añade este botón al final de seat-selector.html -->
-  <button class="btn-confirm" [disabled]="state.selectedSieges().length === 0" (click)="goToSummary()">
+  <button
+    class="btn-confirm"
+    [disabled]="state.selectedSieges().length === 0"
+    (click)="goToSummary()">
     Continuer vers le résumé
   </button>
 </div>

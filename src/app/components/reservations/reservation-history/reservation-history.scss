@@ -1,69 +1,174 @@
 .history-container {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 0 20px;
 
   h2 {
-    color: #2c3e50;
-    margin-bottom: 20px;
+    color: #ffffff;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    border-left: 4px solid #e50914;
+    padding-left: 12px;
   }
 
-  .reservations-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+  // Estructura de cuadrícula (Grid) moderna en lugar de lista estática
+  .reservations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 25px;
 
     .reservation-card {
-      background: white;
-      border-radius: 8px;
-      padding: 15px 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      border-left: 5px solid #3498db;
+      background: #181b22;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      display: flex;
+      flex-direction: column;
 
-      .card-header {
-        display: flex;
-        justify-content: space-between;
-        border-bottom: 1px solid #ecf0f1;
-        padding-bottom: 8px;
-        margin-bottom: 10px;
-        font-weight: bold;
-        color: #34495e;
+      // 🌟 Efecto Hover Profesional General de la Tarjeta
+      &:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 18px 35px rgba(229, 9, 20, 0.2);
+        border-color: rgba(229, 9, 20, 0.4);
+
+        .card-image-wrapper img {
+          transform: scale(1.08); // Zoom elegante de la foto al hacer hover
+        }
       }
 
-      .card-body {
-        margin-bottom: 15px;
-        
-        .seats-info {
-          margin-top: 8px;
-          display: flex;
-          gap: 5px;
-          align-items: center;
-          flex-wrap: wrap;
+      // Contenedor de la imagen con desbordamiento oculto
+      .card-image-wrapper {
+        position: relative;
+        width: 100%;
+        height: 180px;
+        overflow: hidden;
+        background: #0b0c10;
 
-          .badge {
-            background: #2ecc71;
-            color: white;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 12px;
+        .film-thumb {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.5s ease;
+        }
+
+        .overlay-badge {
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          padding: 5px 12px;
+          border-radius: 20px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          backdrop-filter: blur(5px);
+          box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+
+          &.ok {
+            background: rgba(46, 204, 113, 0.85);
+            color: #ffffff;
+          }
+          &.pending {
+            background: rgba(241, 196, 15, 0.85);
+            color: #1a1a1a;
           }
         }
       }
 
-      .card-footer {
+      // Cuerpo y detalles de la tarjeta
+      .card-body {
+        padding: 20px;
         display: flex;
-        justify-content: flex-end;
+        flex-direction: column;
+        flex-grow: 1;
 
-        .btn-cancel {
-          background-color: #e74c3c;
-          color: white;
-          border: none;
-          padding: 6px 12px;
-          border-radius: 4px;
-          cursor: pointer;
+        .film-title {
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: #ffffff;
+          margin-bottom: 12px;
+          line-height: 1.3;
+        }
 
-          &:hover {
-            background-color: #c0392b;
+        .meta-info {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          font-size: 0.85rem;
+          color: #a0aec0;
+          margin-bottom: 15px;
+
+          span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+          }
+        }
+
+        .seats-section {
+          margin-bottom: 20px;
+
+          .seats-label {
+            font-size: 0.75rem;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: block;
+            margin-bottom: 6px;
+          }
+
+          .badges-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+
+            .badge {
+              background: rgba(52, 152, 219, 0.15);
+              color: #3498db;
+              border: 1px solid rgba(52, 152, 219, 0.3);
+              padding: 3px 8px;
+              border-radius: 6px;
+              font-size: 0.75rem;
+              font-weight: 600;
+            }
+          }
+        }
+
+        .card-footer-info {
+          margin-top: auto;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding-top: 15px;
+          border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+          .price-tag {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #2ecc71;
+          }
+
+          .btn-cancel {
+            background-color: transparent;
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.4);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+
+            &:hover {
+              background-color: #e74c3c;
+              color: #ffffff;
+              border-color: #e74c3c;
+              box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+            }
           }
         }
       }
@@ -72,9 +177,12 @@
 
   .loading, .empty, .error {
     text-align: center;
-    padding: 30px;
-    color: #7f8c8d;
-    font-size: 16px;
+    padding: 50px;
+    color: #a0aec0;
+    font-size: 1rem;
+    background: #181b22;
+    border-radius: 12px;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
   }
   .error { color: #e74c3c; }
 }

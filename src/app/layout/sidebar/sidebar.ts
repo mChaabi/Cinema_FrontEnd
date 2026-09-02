@@ -61,19 +61,19 @@ export class SidebarComponent {
       });
     }
 
-    // En sidebar.ts
     groups.push({
       title: 'MES BILLETS',
       items: [
-        { label: 'Réserver un billet', icon: 'bi-ticket-perforated', route: '/reservations/nouvelle/1' } // 👈 Forzamos el ID 1 o el que tengas en tu BD
-        { label: 'Mes réservations', icon: 'bi-journal-check', route: '/reservations/historique' }
+        // sidebar.ts — dentro de MES BILLETS
+        { label: 'Réserver un billet', icon: 'bi-ticket-perforated', route: 'films/a-laffiche' }, // ✅ manda al catálogo, no a una séance fija
+        { label: 'Mes réservations', icon: 'bi-journal-check', route: 'reservations/historique' }
       ]
     });
 
     groups.push({
       title: 'COMPTE',
       items: [
-        { label: 'Mon Profil & Rôle', icon: 'bi-person-badge', route: '/profile' }
+        { label: 'Mon Profil & Rôle', icon: 'bi-person-badge', route: 'profile' }
       ]
     });
 

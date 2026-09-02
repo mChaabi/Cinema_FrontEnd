@@ -14,6 +14,15 @@ export interface ReservationResponseDto {
   nbrPlaces: number;
   dateReservation: string;
   sieges: Siege[];
+  // Añade estas propiedades que faltaban:
+  filmPhotoUrl?: string;
+  filmTitre?: string;
+  salleNumero?: string | number;
+  dateProjection?: string;
+  heureDebut?: string;
+  siegesNumeros?: string[];
+  statutPaiement?: string;
+  montantPaye?: number;
 }
 
 export interface Reservation extends ReservationResponseDto {}

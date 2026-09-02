@@ -7,11 +7,10 @@
         <span class="brand-title">Cine<span class="highlight">Manager</span></span>
       </div>
       <h2>{{ isLoginMode ? 'Bienvenue !' : 'Créer un compte' }}</h2>
-      <p>{{ isLoginMode ? 'Connectez-vous pour accéder à vos réservations.' : 'Remplissez le formulaire pour rejoindre
-        CineManager.' }}</p>
+      <p>{{ isLoginMode ? 'Connectez-vous pour accéder à vos réservations.' : 'Remplissez le formulaire pour rejoindre CineManager.' }}</p>
     </div>
 
-    <!-- ⚠️ ALERTA DE ERROR (Añadida aquí para mayor visibilidad) -->
+    <!-- ⚠️ ALERTA DE ERROR -->
     <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
       <span class="alert-icon">⚠️</span>
       <span class="alert-text">{{ errorMessage }}</span>
@@ -38,6 +37,29 @@
           <i class="bi bi-envelope"></i>
           <input type="email" id="email" name="email" [(ngModel)]="authData.email" required email
             placeholder="exemple@cinema.com" />
+        </div>
+      </div>
+
+      <!-- 📸 Champ Photo de Profil / Caméra (Visible uniquement en mode Inscription) -->
+      <div class="form-group" *ngIf="!isLoginMode">
+        <label>Photo de profil</label>
+        <div class="photo-capture-container">
+          <div class="photo-preview">
+            @if (authData.photoUrl) {
+              <img [src]="authData.photoUrl" alt="Aperçu" class="preview-img" />
+            } @else {
+              <div class="preview-placeholder"><i class="bi bi-camera"></i></div>
+            }
+          </div>
+          <div class="photo-actions">
+            <button type="button" class="btn-secondary-sm" (click)="toggleCameraModal(true)">
+              <i class="bi bi-camera-video"></i> Caméra
+            </button>
+            <label class="btn-secondary-sm file-upload-label">
+              <i class="bi bi-upload"></i> Importer
+              <input type="file" accept="image/*" (change)="onFileSelected($event)" hidden />
+            </label>
+          </div>
         </div>
       </div>
 
@@ -69,4 +91,21 @@
       </p>
     </div>
   </div>
+
+  <!-- 🎥 MODAL DE CÁMARA (Oculto por defecto) -->
+  @if (showCameraModal) {
+    <div class="modal-backdrop">
+      <div class="modal-card">
+        <h3>Prendre une photo</h3>
+        <div class="video-container">
+          <video #videoElement autoplay playsinline width="100%"></video>
+          <canvas #canvasElement style="display:none;"></canvas>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-submit" (click)="capturePhoto()">Capturer</button>
+          <button type="button" class="btn-submit btn-cancel" (click)="toggleCameraModal(false)">Annuler</button>
+        </div>
+      </div>
+    </div>
+  }
 </div>

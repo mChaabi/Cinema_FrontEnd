@@ -9,26 +9,42 @@
     <p>Aún no tienes ninguna reserva realizada.</p>
   </div>
 
-  <div class="reservations-list" *ngIf="!isLoading && reservations.length > 0">
+  <div class="reservations-grid" *ngIf="!isLoading && reservations.length > 0">
     <div class="reservation-card" *ngFor="let res of reservations">
-      <div class="card-header">
-        <span class="reservation-id">Reserva #{{ res.id }}</span>
-        <span class="date">{{ res.dateReservation | date:'short' }}</span>
-      </div>
-
-      <div class="card-body">
-        <p><strong>ID Sesión:</strong> {{ res.seanceId }}</p>
-        <p><strong>Nº de Plazas:</strong> {{ res.nbrPlaces }}</p>
-        
-        <div class="seats-info">
-          <strong>Asientos:</strong>
-          <span class="badge" *ngFor="let siege of res.sieges">{{ siege.numero }}</span>
+      
+      <!-- Contenedor de la Imagen con zoom en hover -->
+      <div class="card-image-wrapper">
+        <img [src]="res.filmPhotoUrl || 'assets/default-movie.jpg'" [alt]="res.filmTitre" class="film-thumb" />
+        <div class="overlay-badge" [ngClass]="res.statutPaiement === 'PAYE' ? 'ok' : 'pending'">
+          {{ res.statutPaiement === 'PAYE' ? '✅ Payé' : '⏳ En attente' }}
         </div>
       </div>
 
-      <div class="card-footer">
-        <button class="btn-cancel" (click)="cancelReservation(res.id)">Cancelar Reserva</button>
+      <!-- Cuerpo de la tarjeta -->
+      <div class="card-body">
+        <h3 class="film-title">{{ res.filmTitre }}</h3>
+        
+        <div class="meta-info">
+          <span><i class="bi bi-camera-reels"></i> Salle {{ res.salleNumero }}</span>
+          <span><i class="bi bi-calendar-event"></i> {{ res.dateProjection }}</span>
+          <span><i class="bi bi-clock"></i> {{ res.heureDebut }}</span>
+        </div>
+
+        <div class="seats-section" *ngIf="res.siegesNumeros?.length">
+          <span class="seats-label">Asientos:</span>
+          <div class="badges-container">
+            <span class="badge" *ngFor="let numero of res.siegesNumeros">{{ numero }}</span>
+          </div>
+        </div>
+
+        <div class="card-footer-info">
+          <span class="price-tag">{{ res.montantPaye }} DH</span>
+          <button class="btn-cancel" (click)="cancelReservation(res.id)">
+            <i class="bi bi-trash"></i> Annuler
+          </button>
+        </div>
       </div>
+
     </div>
   </div>
 </div>

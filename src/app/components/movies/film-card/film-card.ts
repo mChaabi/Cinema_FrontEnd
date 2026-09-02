@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, ViewChild, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewChild, input, output, signal } from '@angular/core';
 import { Film } from '../../../models/film';
 import { FilmStarRatingComponent } from '../film-star-rating/film-star-rating';
 import {

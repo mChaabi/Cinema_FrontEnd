@@ -10,7 +10,9 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, map, of, timeout } from 'rxjs';
 import { Film } from '../../models/film';
+import { Seance } from '../../models/seance';
 import { FilmService } from '../../services/film';
+import { SeanceService } from '../../services/seance';
 import { FilmCarouselComponent } from './film-carousel/film-carousel';
 import { FilmCardComponent } from './film-card/film-card';
 import { FilmDetailsModalComponent } from './film-details-modal/film-details-modal';
@@ -19,7 +21,6 @@ import { getFallbackFilms } from './utils/film.fallback';
 import { filmKey, getGenreLabel, matchesFilmQuery, mergeFilms, normalizeFilm } from './utils/film.utils';
 import { ReservationStateService } from '../reservations/services/reservation-state';
 import { ActivatedRoute, Router } from '@angular/router';
-
 
 @Component({
   selector: 'app-movies',
@@ -31,6 +32,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class MoviesComponent {
   private readonly filmService = inject(FilmService);
+  private readonly seanceService = inject(SeanceService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly route = inject(ActivatedRoute);
   private reservationState = inject(ReservationStateService);
@@ -48,6 +50,9 @@ export class MoviesComponent {
   readonly selectedYear = signal('all');
   readonly filmKey = filmKey;
 
+  readonly selectedFilmId = signal<number | null>(null);
+  readonly seances = signal<Seance[]>([]);
+
   readonly featuredFilms = computed(() => this.films().slice(0, 5));
 
   readonly genreOptions = computed(() => {
@@ -62,6 +67,12 @@ export class MoviesComponent {
     return [...new Set(years)].sort((a, b) => b - a);
   });
 
+  readonly isReservationView = computed(() => {
+    const url = this.router.url.toLowerCase();
+    // Añadimos 'films' o 'a-laffiche' para que también se muestre aquí
+    return url.includes('reservations') || url.includes('reserver') || url.includes('billet') || url.includes('films');
+  });
+
   readonly filteredFilms = computed(() => {
     const query = this.searchQuery();
     const genre = this.selectedGenre();
@@ -71,11 +82,9 @@ export class MoviesComponent {
       if (genre !== 'all' && getGenreLabel(film) !== genre) {
         return false;
       }
-
       if (year !== 'all' && String(film.annee) !== year) {
         return false;
       }
-
       return matchesFilmQuery(film, query);
     });
   });
@@ -89,7 +98,6 @@ export class MoviesComponent {
   constructor() {
     afterNextRender(() => this.loadFilms());
 
-    // Écoute des paramètres de l'URL pour la recherche et les filtres
     this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       if (params['search'] !== undefined) {
         this.searchQuery.set(params['search']);
@@ -129,10 +137,26 @@ export class MoviesComponent {
     this.selectedGenre.set((event.target as HTMLSelectElement).value);
   }
 
-  irAReservar(seance: any, filmTitle: string) {
-  this.reservationState.setSeance(seance.id!, filmTitle);
-  this.router.navigate(['/reservations/nouvelle', seance.id]);
-}
+  verSeances(film: Film): void {
+    if (film.id == null) return;
+
+    if (this.selectedFilmId() === film.id) {
+      this.selectedFilmId.set(null);
+      return;
+    }
+
+    this.selectedFilmId.set(film.id);
+    this.seanceService.getSeancesByFilm(film.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((data) => this.seances.set(data));
+  }
+
+  reserver(seance: Seance, filmTitle: string): void {
+    if (seance.id != null) {
+      this.reservationState.setSeance(seance.id, filmTitle);
+      this.router.navigate(['/reservations/nouvelle', seance.id]);
+    }
+  }
 
   onYearChange(event: Event): void {
     this.selectedYear.set((event.target as HTMLSelectElement).value);

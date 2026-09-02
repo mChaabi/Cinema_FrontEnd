@@ -1,100 +1,162 @@
 <section class="profile-page">
   <header class="page-header">
-    <p class="eyebrow">Compte</p>
-    <h1>Mon Profil & Rôle</h1>
-    <p class="lede">Gérez vos informations personnelles et consultez vos permissions.</p>
+    <div class="header-badge">
+      <span class="dot"></span> Espace Personnel
+    </div>
+    <h1>Mon Profil & Sécurité</h1>
+    <p class="lede">Gérez vos informations personnelles, vos paramètres de sécurité et vos privilèges de compte.</p>
   </header>
 
   @if (user(); as u) {
     @if (saveSuccess()) {
-      <p class="success-banner">✓ Modifications enregistrées avec succès.</p>
+      <div class="success-banner">
+        <span class="icon">✓</span> Modifications enregistrées avec succès.
+      </div>
     }
 
-    <div class="profile-grid">
-      <!-- Carte identité -->
-      <div class="card identity-card">
-        <div class="avatar-wrap">
-          <div class="avatar">{{ u.username.charAt(0).toUpperCase() }}</div>
-        </div>
-        <h2>{{ u.username }}</h2>
-        <span class="role-badge" [class.admin]="u.role === 'ADMIN'">{{ u.role }}</span>
-      </div>
+    <div class="profile-layout">
+      
+      <!-- COLUMNA IZQUIERDA: Tarjeta de Identidad & Foto -->
+      <div class="profile-sidebar">
+        <div class="card identity-card">
+          <div class="avatar-container">
+            @if (u.photoUrl) {
+              <img [src]="u.photoUrl" alt="Photo de profil" class="avatar-img" />
+            } @else {
+              <div class="avatar-fallback">{{ u.username.charAt(0).toUpperCase() }}</div>
+            }
+            <div class="status-indicator"></div>
+          </div>
 
-      <!-- Carte infos personnelles -->
-      <div class="card">
-        <div class="card-head">
-          <h3>Informations personnelles</h3>
-          <button type="button" class="btn-link" (click)="toggleEdit()">
-            {{ isEditing() ? 'Annuler' : 'Modifier' }}
-          </button>
-        </div>
+          <h2 class="username">{{ u.username }}</h2>
+          <p class="user-email">{{ u.email }}</p>
+          
+          <div class="role-badge-wrapper">
+            <span class="role-badge" [class.admin]="u.role === 'ADMIN'">
+              @if (u.role === 'ADMIN') {
+                👑 Administrateur
+              } @else {
+                👤 Utilisateur Standard
+              }
+            </span>
+          </div>
 
-        @if (!isEditing()) {
-          <dl class="info-list">
-            <div><dt>Nom d'utilisateur</dt><dd>{{ u.username }}</dd></div>
-            <div><dt>Email</dt><dd>{{ u.email }}</dd></div>
-            <div><dt>Rôle</dt><dd>{{ u.role }}</dd></div>
-          </dl>
-        } @else {
-          <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="edit-form">
-            <label class="field">
-              <span>Email</span>
-              <input type="email" formControlName="email" />
-            </label>
-            <button type="submit" class="btn-primary" [disabled]="profileForm.invalid">
-              Enregistrer
-            </button>
-          </form>
-        }
-      </div>
-
-      <!-- Carte sécurité -->
-      <div class="card">
-        <h3>Sécurité</h3>
-        <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="edit-form">
-          <label class="field">
-            <span>Mot de passe actuel</span>
-            <input type="password" formControlName="currentPassword" />
-          </label>
-          <label class="field">
-            <span>Nouveau mot de passe</span>
-            <input type="password" formControlName="newPassword" />
-          </label>
-          <label class="field">
-            <span>Confirmer le mot de passe</span>
-            <input type="password" formControlName="confirmPassword" />
-          </label>
-          <button type="submit" class="btn-primary" [disabled]="passwordForm.invalid">
-            Changer le mot de passe
-          </button>
-        </form>
-      </div>
-
-      <!-- Carte permissions du rôle -->
-      <div class="card permissions-card">
-        <h3>Permissions de votre rôle</h3>
-        <ul class="permissions-list">
-          @for (perm of rolePermissions(); track perm) {
-            <li>
-              <span class="check">✓</span>
-              {{ perm }}
-            </li>
+          @if (u.role === 'ADMIN') {
+            <div class="admin-shortcut-box">
+              <p>Accès complet aux outils de modération et configuration.</p>
+              <button type="button" class="btn-admin-action" routerLink="/users">
+                Gérer les utilisateurs
+              </button>
+            </div>
           }
-        </ul>
+        </div>
       </div>
 
-      <!-- ⬇️ AQUÍ VA EL BLOQUE NUEVO — dentro de profile-grid, después de permissions-card ⬇️ -->
-      @if (u.role === 'ADMIN') {
-        <div class="card admin-shortcut">
-          <h3>Accès administrateur</h3>
-          <p>Vous avez accès à la gestion complète du système.</p>
-          <button type="button" class="btn-primary" routerLink="/users">Gérer les utilisateurs</button>
+      <!-- COLUMNA DERECHA: Paneles de Edición y Seguridad -->
+      <div class="profile-content">
+        
+        <!-- Tarjeta de Información Personal -->
+        <div class="card content-card">
+          <div class="card-head">
+            <div class="title-group">
+              <span class="card-icon">✏️</span>
+              <h3>Informations personnelles</h3>
+            </div>
+            <button type="button" class="btn-link" (click)="toggleEdit()">
+              {{ isEditing() ? 'Fermer' : 'Modifier l\'email' }}
+            </button>
+          </div>
+
+          @if (!isEditing()) {
+            <div class="info-grid-view">
+              <div class="info-item">
+                <span class="info-label">Nom d'utilisateur</span>
+                <span class="info-value">{{ u.username }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Adresse e-mail</span>
+                <span class="info-value">{{ u.email }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Type de compte</span>
+                <span class="info-value highlight">{{ u.role }}</span>
+              </div>
+            </div>
+          } @else {
+            <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="edit-form">
+              <label class="field">
+                <span>Nouvelle adresse e-mail</span>
+                <input type="email" formControlName="email" placeholder="Entrez votre nouvel email" />
+              </label>
+              <div class="form-actions">
+                <button type="submit" class="btn-primary" [disabled]="profileForm.invalid">
+                  Enregistrer les modifications
+                </button>
+              </div>
+            </form>
+          }
         </div>
-      }
-      <!-- ⬆️ FIN DEL BLOQUE NUEVO ⬆️ -->
+
+        <!-- Tarjeta de Seguridad (Contraseña) -->
+        <div class="card content-card">
+          <div class="card-head">
+            <div class="title-group">
+              <span class="card-icon">🔒</span>
+              <h3>Sécurité & Mot de passe</h3>
+            </div>
+          </div>
+          
+          <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="edit-form security-form">
+            <div class="form-row">
+              <label class="field">
+                <span>Mot de passe actuel</span>
+                <input type="password" formControlName="currentPassword" placeholder="••••••••" />
+              </label>
+            </div>
+            <div class="form-row dual">
+              <label class="field">
+                <span>Nouveau mot de passe</span>
+                <input type="password" formControlName="newPassword" placeholder="Min. 8 caractères" />
+              </label>
+              <label class="field">
+                <span>Confirmer le mot de passe</span>
+                <input type="password" formControlName="confirmPassword" placeholder="Répéter le mot de passe" />
+              </label>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-primary" [disabled]="passwordForm.invalid">
+                Mettre à jour le mot de passe
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Tarjeta de Permisos del Rol -->
+        <div class="card content-card">
+          <div class="card-head">
+            <div class="title-group">
+              <span class="card-icon">🛡️</span>
+              <h3>Permissions associées au profil</h3>
+            </div>
+          </div>
+          
+          <ul class="permissions-grid-list">
+            @for (perm of rolePermissions(); track perm) {
+              <li>
+                <span class="check-icon">✓</span>
+                <span>{{ perm }}</span>
+              </li>
+            }
+          </ul>
+        </div>
+
+      </div>
 
     </div>
   } @else {
-    <div class="state">Chargement du profil…</div>
+    <div class="state-loading">
+      <div class="spinner"></div>
+      <p>Chargement des données du profil...</p>
+    </div>
   }
 </section>

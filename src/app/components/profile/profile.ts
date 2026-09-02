@@ -7,7 +7,7 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [ReactiveFormsModule,RouterLink],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './profile.html',
   styleUrl: './profile.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -34,17 +34,17 @@ export class ProfileComponent {
     const role = this.user()?.role;
     return role === 'ADMIN'
       ? [
-          'Gérer les films (créer, modifier, supprimer)',
-          'Gérer les séances et les salles',
-          'Voir toutes les réservations clients',
-          'Gérer les utilisateurs et leurs rôles'
-        ]
+        'Gérer les films (créer, modifier, supprimer)',
+        'Gérer les séances et les salles',
+        'Voir toutes les réservations clients',
+        'Gérer les utilisateurs et leurs rôles'
+      ]
       : [
-          'Consulter le catalogue de films',
-          'Réserver des billets',
-          'Laisser des avis et notes',
-          'Gérer ses propres réservations'
-        ];
+        'Consulter le catalogue de films',
+        'Réserver des billets',
+        'Laisser des avis et notes',
+        'Gérer ses propres réservations'
+      ];
   });
 
   constructor() {
@@ -52,9 +52,15 @@ export class ProfileComponent {
   }
 
   load(): void {
-    this.profileService.getCurrentUser().subscribe((user) => {
-      this.user.set(user);
-      this.profileForm.patchValue({ email: user.email });
+    this.profileService.getCurrentUser().subscribe({
+      next: (user) => {
+        this.user.set(user);
+        this.profileForm.patchValue({ email: user.email });
+      },
+      error: (err) => {
+        console.error('Error al cargar el perfil:', err);
+        // Opcional: redirige al login si la sesión no es válida
+      }
     });
   }
 
@@ -64,7 +70,7 @@ export class ProfileComponent {
 
   saveProfile(): void {
     if (this.profileForm.invalid) return;
-    
+
     // On s'assure de caster ou filtrer les valeurs pour correspondre à Partial<UserProfile>
     const formValue = this.profileForm.value as Partial<UserProfile>;
 

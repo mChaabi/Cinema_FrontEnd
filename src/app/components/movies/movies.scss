@@ -209,19 +209,145 @@ h1 {
   }
 }
 
+/* --- Contenedor de la tarjeta y secciones --- */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-  gap: 22px;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 24px;
+  align-items: start;
 }
 
-@media (max-width: 520px) {
-  .filter-toolbar {
-    max-width: 100%;
+.film-card-wrapper {
+  display: flex;
+  flex-direction: column;
+  background: #0f172a;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #1e293b;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+
+  &:hover {
+    border-color: #334155;
+    box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* --- Botón para alternar sesiones ("Voir les séances" / "Masquer") --- */
+.btn-toggle-seances {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: calc(100% - 24px);
+  margin: 0 12px 14px 12px;
+  padding: 10px 16px;
+  background: #1e293b;
+  color: #f8fafc;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #334155;
+    color: #ffffff;
+    border-color: #e50914;
   }
 
-  .filter-row select {
-    max-width: none;
-    flex: 1 1 calc(50% - 4px);
+  /* 🟢 Cuando se hace clic y está activo (cambia a rojo elegante) */
+  &.active {
+    background: #e50914;
+    color: #ffffff;
+    border-color: #e50914;
+    box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3);
+
+    &:hover {
+      background: #f40612;
+    }
+  }
+}
+
+/* --- Contenedor desplegable de las sesiones --- */
+.seances-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0 12px 14px 12px;
+  padding: 12px;
+  background: #020617;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  animation: slideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+  .no-seances {
+    margin: 0;
+    color: #94a3b8;
+    font-size: 0.82rem;
+    text-align: center;
+    padding: 10px;
+  }
+}
+
+/* --- Elemento individual de sesión --- */
+.seance-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: #e2e8f0;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #1e293b;
+    border-color: #475569;
+  }
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+}
+
+/* --- Botón de reserva en la sesión (Verde profesional) --- */
+.btn-reserve {
+  padding: 6px 12px;
+  background: #10b981;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    background: #059669;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* Animación fluida de apertura */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

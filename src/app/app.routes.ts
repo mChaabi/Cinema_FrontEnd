@@ -18,22 +18,22 @@ export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
-    canActivate: [authGuard],   // 🔒 exige estar logueado
+    canActivate: [authGuard],   // 🔒 Exige estar logueado
     children: [
       { path: '', redirectTo: 'films/a-laffiche', pathMatch: 'full' },
 
-      // 👑 Solo ADMIN
+      // 👑 Solo ADMIN (Gestión protegida + Perfil de administrador)
       { path: 'dashboard', component: DashboardComponent, canActivate: [adminGuard] },
       { path: 'salles',    component: SallesComponent,    canActivate: [adminGuard] },
       { path: 'genres',    component: GenresComponent,    canActivate: [adminGuard] },
+      { path: 'profile',   component: ProfileComponent,   canActivate: [adminGuard] }, // 🔒 ¡Solo el ADMIN puede ver su perfil aquí!
 
-      // 👤 ADMIN + USER
-      { path: 'films/a-laffiche',        component: MoviesComponent },
+      // 👤 ADMIN + USER (Disponibles para todos los logueados)
+      { path: 'films/a-laffiche',         component: MoviesComponent },
       { path: 'films/prochainement',     component: UpcomingFilmsComponent },
       { path: 'reservations/nouvelle/:seanceId', component: SeatSelectorComponent },
       { path: 'reservations/resumen',    component: ReservationSummaryComponent },
-      { path: 'reservations/historique', component: ReservationHistoryComponent },
-      { path: 'profile',                 component: ProfileComponent }
+      { path: 'reservations/historique', component: ReservationHistoryComponent }
     ]
   },
   { path: '**', redirectTo: '' }
